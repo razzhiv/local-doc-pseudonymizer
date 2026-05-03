@@ -1,0 +1,90 @@
+# Local sensitive working data
+/input/*
+!/input/.gitkeep
+!/input/README.md
+
+/output/*
+!/output/.gitkeep
+!/output/README.md
+
+/to_decode/*
+!/to_decode/.gitkeep
+!/to_decode/README.md
+
+/restored/*
+!/restored/.gitkeep
+!/restored/README.md
+
+/review/*
+!/review/.gitkeep
+!/review/README.md
+
+/feedback/*
+!/feedback/.gitkeep
+!/feedback/README.md
+
+/archive/
+/corpus/real_sensitive/
+
+# Token dictionaries and reports containing original values
+project_dictionary.json
+dictionary.json
+**/project_dictionary.json
+**/dictionary.json
+output/anonymization_report.*
+output/reports/
+
+# Manual rules may contain real sensitive values
+/rules/manual_hide.txt
+/rules/manual_allow.txt
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Documents and spreadsheets based on real data
+*.docx
+*.pdf
+*.xlsx
+*.xls
+*.ods
+*.csv
+*.tsv
+*.rtf
+*.odt
+
+# Archives
+*.zip
+*.rar
+*.7z
+
+# Models / dictionaries / embeddings
+*.tar
+*.tar.gz
+*.bin
+*.vec
+*.model
+*.onnx
+*.pt
+*.pth
+*.ckpt
+/models/
+/model_cache/
+/embeddings/
+/dicts/
+
+# Python / OS
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.DS_Store
+Thumbs.db
+
+# Keep safe synthetic/test files explicitly
+!expected/regression_cases.jsonl
+!rules/*.example.txt
+!examples/synthetic_input/**
+!examples/synthetic_output/**
+!corpus/synthetic/**

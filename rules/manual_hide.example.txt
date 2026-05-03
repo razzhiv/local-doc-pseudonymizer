@@ -1,0 +1,20 @@
+# rules/manual_hide.example.txt
+# Example file only. Do not put real personal data in public issues or commits.
+#
+# Copy this file locally to:
+#   rules/manual_hide.txt
+#
+# Add values that should always be masked in your local project.
+#
+# Format:
+#   TYPE: value
+#
+# Examples with synthetic data:
+PERSON: Иванов Иван Иванович
+PERSON: Иванов И.И.
+ORG_PRIVATE: ООО Ромашка
+ADDRESS_DETAIL: ул. Тестовая, д. 1
+PHONE: +7 921 123-45-67
+EMAIL: example@example.com
+INN: 770000000000
+TEXT: любой локальный фрагмент, который нужно скрыть

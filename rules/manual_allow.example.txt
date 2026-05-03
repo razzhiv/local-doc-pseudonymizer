@@ -1,0 +1,26 @@
+# rules/manual_allow.example.txt
+# Example file only. Do not put real case-specific values in public issues or commits.
+#
+# Copy this file locally to:
+#   rules/manual_allow.txt
+#
+# Add values or contexts that should not be masked in your local project.
+АКТ №
+акт №
+Сертификат:
+сертификат:
+Номер обращения
+номер обращения
+УИД
+UID
+регистрационный номер
+ИФНС России
+ФНС России
+УФНС
+МВД
+ФССП
+Росреестр
+Роспотребнадзор
+городской суд
+районный суд
+арбитражный суд

@@ -1,0 +1,11 @@
+BeforeSending / local-doc-pseudonymizer
+
+Copyright 2026 Alex Razzhivin and contributors
+
+This product includes software developed for the BeforeSending project.
+
+The core source code is licensed under the Apache License, Version 2.0.
+See the LICENSE file for details.
+
+Third-party dependencies and their respective licenses are documented separately
+in THIRD_PARTY_LICENSES.md.
