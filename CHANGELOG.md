@@ -488,3 +488,29 @@ PASS: restore smoke test succeeded.
 - `1_anonymize.py` and `2_deanonymize.py` remain as compatibility wrappers.
 - Public docs were partially updated to prefer the new names.
 - GitHub export builder was updated to include the new public entrypoints.
+
+## 2026-05-03 — v0.1-alpha polish preparation
+
+### Changed
+
+- Added explicit `v0.1-alpha / experimental MVP` release status to README.
+- Clarified that the current public release is an experimental local-first MVP, not production security/compliance software.
+- Added a short `v0.1-alpha polish` section to ROADMAP.
+
+### Regression status
+
+No core behavior changes were made.
+
+Current synthetic regression baseline remains:
+
+```text
+PASS 27 / FAIL 0 / XFAIL 2 / XPASS 0 / ERROR 0 / TOTAL 29
+Blocking errors: 0
+```
+
+### Notes
+
+- INN with spaces and INN OCR-letter substitution remain known XFAIL gaps.
+- Those gaps are intentionally deferred to a separate mini-sprint.
+- This polish step is intended to prepare the repository for a future `v0.1-alpha` tag/release.
+

@@ -1,5 +1,25 @@
 # Roadmap
 
+## v0.1-alpha polish
+
+Status: current public MVP baseline.
+
+Goals before tagging `v0.1-alpha`:
+
+- keep the public repository GitHub-safe;
+- keep the regression baseline green;
+- avoid new core behavior changes;
+- document known limitations clearly;
+- defer INN normalization / OCR-suspect work to a separate mini-sprint.
+
+Non-goals for `v0.1-alpha`:
+
+- no OCR;
+- no GUI;
+- no encrypted vault;
+- no compliance claims;
+- no real-data corpus.
+
 ## Current status
 
 BeforeSending is an experimental local-first MVP focused on DOCX and text-layer PDF documents.

@@ -16,6 +16,20 @@ Local-first document pseudonymization / reversible masking / risk reduction for 
 > Автоматическое обнаружение может давать пропуски и ложные срабатывания.
 > Перед передачей документов третьим лицам результат необходимо проверять вручную.
 
+## Release status
+
+Current public status: `v0.1-alpha` / experimental MVP.
+
+Synthetic regression baseline:
+
+```text
+PASS 27 / FAIL 0 / XFAIL 2 / XPASS 0 / ERROR 0 / TOTAL 29
+Blocking errors: 0
+```
+
+This release is intended for early local testing and review-driven improvement. It is not production security software, a compliance solution, or a guarantee of complete anonymization.
+
+
 ## What this project is
 
 BeforeSending is a local-first document preparation tool.
