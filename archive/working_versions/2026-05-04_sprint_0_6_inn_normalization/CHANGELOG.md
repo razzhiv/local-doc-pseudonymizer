@@ -1,5 +1,59 @@
 # CHANGELOG
 
+## 2026-05-04 — Sprint 0.6: INN normalization and OCR-suspect handling
+
+### Fixed
+
+- Closed `test_inn_spaced_known_gap_001`:
+  - `ИНН: 473 254 765 214` is now masked as `ИНН: [INN_1]`.
+- Closed `test_inn_ocr_letter_known_gap_001`:
+  - `ИНН: 47325476521З` is now masked as `ИНН: [OCR_SUSPECT_INN_1]`.
+
+### Added
+
+- Added guard tests ensuring spaced/OCR-like service numbers are not treated as INN without explicit `ИНН` label:
+  - `АКТ № 473 254 765 214`
+  - `Сертификат: 473 254 765 214`
+  - `Номер обращения 473 254 765 214 зарегистрирован.`
+  - `АКТ № 47325476521З`
+  - `Сертификат: 47325476521З`
+
+### Changed
+
+- Added contextual INN detector for values near explicit `ИНН` label where spaces/hyphens are removed and the normalized value has 10 or 12 digits.
+- Added narrow OCR-suspect handling for `OCR_SUSPECT_INN` near explicit `ИНН` label using minimal OCR-like substitutions:
+  - `З` / `з` → `3`
+  - `О` / `о` → `0`
+- Updated `run_regression_tests.py` seed constants so `seed-extended` preserves the Sprint 0.6 regression corpus.
+
+### Regression result
+
+```text
+PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
+Blocking errors: 0
+```
+
+Validated with:
+
+```bash
+python3 run_regression_tests.py run
+python3 run_regression_tests.py run-strict
+```
+
+Latest verified report:
+
+```text
+output/reports/regression_report_2026-05-04_00-08-07.md
+```
+
+### Notes
+
+- No OCR engine was added.
+- No broad detection of long arbitrary numbers was added.
+- Service-number contexts remain guarded by regression tests.
+- The existing `OCR_SUSPECT_INN` taxonomy is reused.
+- `1_anonymize.py` remains a compatibility wrapper around `pseudonymize.py`.
+
 ## 2026-05-01 — Sprint 0.2 / controlled improvement loop
 
 ### Added
@@ -489,71 +543,99 @@ PASS: restore smoke test succeeded.
 - Public docs were partially updated to prefer the new names.
 - GitHub export builder was updated to include the new public entrypoints.
 
-## 2026-05-03 — v0.1-alpha polish preparation
+## 2026-05-03 — GitHub public MVP published
 
-### Changed
+### Published
 
-- Added explicit `v0.1-alpha / experimental MVP` release status to README.
-- Clarified that the current public release is an experimental local-first MVP, not production security/compliance software.
-- Added a short `v0.1-alpha polish` section to ROADMAP.
+- Published the initial public GitHub repository:
+
+```text
+https://github.com/razzhiv/local-doc-pseudonymizer
+```
+
+- Public brand:
+
+```text
+BeforeSending
+```
+
+- Repository name:
+
+```text
+local-doc-pseudonymizer
+```
+
+- Default branch:
+
+```text
+main
+```
+
+### Initial commit
+
+```text
+646090b Initial experimental MVP release
+```
+
+### Verified
+
+- README renders correctly.
+- Apache-2.0 license is recognized by GitHub.
+- Security policy is recognized by GitHub.
+- Issue templates are available:
+  - Bug report
+  - False negative
+  - False positive
+  - Feature request
+- GitHub Actions synthetic regression workflow passed successfully.
+- Repository description and topics were added.
+- Git email privacy is configured via GitHub noreply email.
 
 ### Regression status
 
-No core behavior changes were made.
+GitHub Actions regression run completed successfully.
 
-Current synthetic regression baseline remains:
+Current synthetic regression baseline:
 
 ```text
 PASS 27 / FAIL 0 / XFAIL 2 / XPASS 0 / ERROR 0 / TOTAL 29
 Blocking errors: 0
 ```
+
+### Publication scope
+
+The repository was published as an experimental public MVP.
+
+Included:
+
+- local-first pseudonymization core;
+- token restoration flow;
+- synthetic regression corpus;
+- human review tooling;
+- documentation;
+- security/disclaimer/contributing files;
+- issue templates;
+- GitHub Actions workflow.
+
+Excluded:
+
+- real documents;
+- token dictionaries;
+- real review files;
+- real feedback cases;
+- local manual hide/allow rules;
+- generated output files;
+- private archives.
 
 ### Notes
 
-- INN with spaces and INN OCR-letter substitution remain known XFAIL gaps.
-- Those gaps are intentionally deferred to a separate mini-sprint.
-- This polish step is intended to prepare the repository for a future `v0.1-alpha` tag/release.
+- No GitHub Release was created yet.
+- The repository is public, but the first tagged release is intentionally deferred.
+- Remaining known gaps:
+  - `test_inn_spaced_known_gap_001`
+  - `test_inn_ocr_letter_known_gap_001`
 
-## 2026-05-03 — v0.1-alpha released
+### Next possible steps
 
-- Published GitHub repository: `razzhiv/local-doc-pseudonymizer`.
-- Published pre-release: `v0.1-alpha — experimental MVP`.
-- GitHub Actions synthetic regression passed.
-- Current baseline:
-
-```text
-PASS 27 / FAIL 0 / XFAIL 2 / XPASS 0 / ERROR 0 / TOTAL 29
-Blocking errors: 0
-```
-
-Remaining known gaps:
-
-- INN with spaces.
-- INN with OCR-letter substitution.
-
-## 2026-05-04 — Sprint 0.6 — INN normalization and OCR-suspect handling
-
-### Changed
-
-- Added controlled handling for spaced/hyphenated INN values near an explicit `ИНН` label.
-- Added controlled OCR-suspect handling for INN-like values near an explicit `ИНН` label.
-- Reused existing `OCR_SUSPECT_INN` taxonomy; no new token type was added.
-- Added negative guard tests for service-like numbers without an explicit `ИНН` label.
-
-### Closed known gaps
-
-- `test_inn_spaced_known_gap_001`
-- `test_inn_ocr_letter_known_gap_001`
-
-### Regression result
-
-```text
-PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
-Blocking errors: 0
-```
-
-### Safety notes
-
-- No broad long-number detector was added.
-- Service-number contexts remain protected by regression tests.
-- No OCR engine, GUI, encrypted vault, or release work was added.
+- Small polish pass before creating `v0.1-alpha`.
+- Or mini-sprint 0.6: INN normalization and OCR-suspect handling.
