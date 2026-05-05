@@ -88,3 +88,10 @@ Thumbs.db
 !examples/synthetic_input/**
 !examples/synthetic_output/**
 !corpus/synthetic/**
+
+# Generated local regression output
+/expected/regression_last_results.json
+
+# Local generated rule files
+/rules/public_orgs.txt
+/rules/private_org_markers.txt
