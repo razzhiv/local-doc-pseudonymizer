@@ -577,3 +577,15 @@ Blocking errors: 0
 
 - No new core detection behavior was added in this cleanup step.
 - INN with spaces and INN OCR-letter substitution remain documented as former synthetic XFAIL cases fixed in Sprint 0.6.
+## 2026-05-06 — Sprint 0.7.1 — regression entrypoint cleanup
+
+### Changed
+
+- Regression tests now load `pseudonymize.py` directly instead of the legacy `1_anonymize.py` compatibility wrapper.
+- Updated operational messages and comments to refer to `pseudonymize.py`.
+- `1_anonymize.py` remains available as a legacy compatibility entrypoint.
+
+### Regression
+
+- PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
+- Blocking errors: 0
