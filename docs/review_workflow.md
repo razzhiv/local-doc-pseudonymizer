@@ -40,5 +40,5 @@ Each meaningful rule should be backed by:
 ## Current baseline
 
 ```text
-PASS 27 / FAIL 0 / XFAIL 2 / XPASS 0 / ERROR 0 / TOTAL 29
+PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
 ```

@@ -27,10 +27,10 @@ python3 run_regression_tests.py run
 python3 run_regression_tests.py run-strict
 ```
 
-Latest verified report:
+Latest public verified report:
 
 ```text
-output/reports/regression_report_2026-05-04_00-08-07.md
+docs/synthetic_regression_report_latest.md
 ```
 
 ## Safety notes
