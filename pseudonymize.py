@@ -1213,7 +1213,7 @@ def make_safe_context_for_feedback(text, finding, window=35):
 
 
 def build_feedback_case(text, finding, filename, block_name):
-    # Regression tests import 1_anonymize.py and call anonymize_text_block directly.
+    # Regression tests import pseudonymize.py and call anonymize_text_block directly.
     # We do not want synthetic regression runs to pollute feedback/cases.jsonl.
     if str(filename).startswith("synthetic_regression"):
         return None
