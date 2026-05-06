@@ -29,10 +29,15 @@ Current support is experimental and rule-based / NLP-assisted.
 - ordinary contract / claim / procedural dates;
 - service document numbers when recognized as such.
 
-## Known gaps
+## Known limitations / remaining weak spots
 
-- INN with spaces;
-- INN with OCR-letter substitution;
 - complex address fragments;
 - scanned PDFs and images;
-- token fragmentation for person aliases.
+- token fragmentation for person aliases;
+- contextual re-identification risks;
+- false positives and false negatives in unseen drafting patterns.
+
+Former synthetic XFAIL cases fixed in Sprint 0.6:
+
+- INN with spaces;
+- INN with OCR-letter substitution.

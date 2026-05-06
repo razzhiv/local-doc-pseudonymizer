@@ -24,6 +24,7 @@
 !/feedback/README.md
 
 /archive/
+/diffs/
 /corpus/real_sensitive/
 
 # Token dictionaries and reports containing original values
@@ -95,3 +96,4 @@ Thumbs.db
 # Local generated rule files
 /rules/public_orgs.txt
 /rules/private_org_markers.txt
+/MANIFEST_SHA256.txt

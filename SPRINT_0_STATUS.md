@@ -812,3 +812,28 @@ Sprint 0.5 можно считать закрытым как successful hardenin
 Важно:
 
 Этот mini-sprint должен быть отдельной фазой, потому что он меняет не только false-positive guards, но и логику нормализации / suspect-detection для ИНН.
+
+---
+
+## 12. Sprint 0.7 public baseline alignment
+
+Sprint 0.6 is treated as completed and verified.
+
+Current public synthetic regression baseline:
+
+```text
+PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
+Blocking errors: 0
+```
+
+Closed known gaps:
+
+- INN with spaces;
+- INN with OCR-letter substitution.
+
+Sprint 0.7 focuses on public baseline alignment rather than new detection behavior:
+
+- GitHub Actions must run `python run_regression_tests.py run-strict`;
+- README and public docs must show the current 34/0/0/34 baseline;
+- old XFAIL wording should be kept only as historical Sprint 0.5 context;
+- no new core behavior changes are included in this cleanup step.

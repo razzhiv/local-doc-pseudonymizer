@@ -557,3 +557,23 @@ Blocking errors: 0
 - No broad long-number detector was added.
 - Service-number contexts remain protected by regression tests.
 - No OCR engine, GUI, encrypted vault, or release work was added.
+
+## 2026-05-05 — Sprint 0.7 — public baseline alignment
+
+### Changed
+
+- Updated GitHub Actions to run the actual strict synthetic regression command: `python run_regression_tests.py run-strict`.
+- Aligned README and public documentation with the Sprint 0.6 baseline.
+- Removed stale wording that listed the two Sprint 0.6 INN cases as current XFAIL gaps.
+
+### Regression baseline
+
+```text
+PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
+Blocking errors: 0
+```
+
+### Notes
+
+- No new core detection behavior was added in this cleanup step.
+- INN with spaces and INN OCR-letter substitution remain documented as former synthetic XFAIL cases fixed in Sprint 0.6.

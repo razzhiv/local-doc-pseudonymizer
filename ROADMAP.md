@@ -1,24 +1,25 @@
 # Roadmap
 
-## v0.1-alpha polish
+## v0.1.1-alpha public baseline alignment
 
-Status: current public MVP baseline.
+Status: current cleanup branch after Sprint 0.6.
 
-Goals before tagging `v0.1-alpha`:
+Goals:
 
 - keep the public repository GitHub-safe;
+- make GitHub Actions run the actual strict synthetic regression command;
+- align public documentation with the Sprint 0.6 regression baseline;
 - keep the regression baseline green;
-- avoid new core behavior changes;
-- document known limitations clearly;
-- defer INN normalization / OCR-suspect work to a separate mini-sprint.
+- avoid new core behavior changes in this cleanup sprint.
 
-Non-goals for `v0.1-alpha`:
+Non-goals:
 
 - no OCR;
 - no GUI;
 - no encrypted vault;
 - no compliance claims;
-- no real-data corpus.
+- no real-data corpus;
+- no new detection rules.
 
 ## Current status
 
@@ -27,10 +28,13 @@ BeforeSending is an experimental local-first MVP focused on DOCX and text-layer 
 Current regression baseline:
 
 ```text
-PASS 27 / FAIL 0 / XFAIL 2 / XPASS 0 / ERROR 0 / TOTAL 29
+PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
+Blocking errors: 0
 ```
 
-Remaining known gaps:
+Current public synthetic XFAIL cases: none.
+
+Closed in Sprint 0.6:
 
 - INN with spaces;
 - INN with OCR-letter substitution.
@@ -46,18 +50,19 @@ Focus:
 - safe GitHub documentation;
 - no real data in public repository.
 
-## Mini-sprint 0.6 candidate
+## Sprint 0.6 completed
 
 INN normalization and OCR-suspect handling:
 
-- INN with spaces;
-- INN with OCR-letter substitution;
-- positive and negative regression tests before active core changes.
+- spaced/hyphenated INN values near an explicit `ИНН` label are masked as `INN`;
+- OCR-like INN values near an explicit `ИНН` label are masked as `OCR_SUSPECT_INN`;
+- service-number contexts remain protected by negative regression tests.
 
 ## Later
 
 Possible future work:
 
+- DOCX/PDF end-to-end synthetic tests;
 - desktop GUI;
 - encrypted local vault;
 - visual review;

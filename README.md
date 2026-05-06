@@ -23,7 +23,7 @@ Current public status: `v0.1-alpha` / experimental MVP.
 Synthetic regression baseline:
 
 ```text
-PASS 27 / FAIL 0 / XFAIL 2 / XPASS 0 / ERROR 0 / TOTAL 29
+PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
 Blocking errors: 0
 ```
 
@@ -175,7 +175,9 @@ Known limitations:
 - token dictionary leakage can reverse pseudonymization;
 - manual review is required before external sharing.
 
-Current known gaps:
+Current synthetic XFAIL cases: none in the public baseline.
+
+Closed in Sprint 0.6:
 
 - INN with spaces;
 - INN with OCR-letter substitution.
@@ -187,13 +189,13 @@ The public repository uses a synthetic regression corpus only.
 Current baseline:
 
 ```text
-PASS 27 / FAIL 0 / XFAIL 2 / XPASS 0 / ERROR 0 / TOTAL 29
+PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
 ```
 
 Run tests:
 
 ```bash
-python run_regression_tests.py
+python run_regression_tests.py run-strict
 ```
 
 or on Windows:

@@ -64,7 +64,13 @@ Before sharing processed documents externally, manually review:
 - skipped / suspicious cases;
 - known limitations.
 
-## Current known gaps
+## Current synthetic XFAIL status
+
+Current public synthetic XFAIL cases: none.
+
+Former XFAIL cases fixed in Sprint 0.6:
 
 - INN with spaces;
 - INN with OCR-letter substitution.
+
+This does not mean the tool has no real-world gaps. The general limitations above still apply.
