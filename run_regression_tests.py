@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 ROOT = Path(__file__).resolve().parent
-ANONYMIZER_PATH = ROOT / "1_anonymize.py"
+ANONYMIZER_PATH = ROOT / "pseudonymize.py"
 EXPECTED_DIR = ROOT / "expected"
 REPORTS_DIR = ROOT / "output" / "reports"
 REGRESSION_CASES_PATH = EXPECTED_DIR / "regression_cases.jsonl"
@@ -501,11 +501,11 @@ def resolve_placeholders(text: str) -> str:
 def load_anonymizer_module():
     if not ANONYMIZER_PATH.exists():
         raise FileNotFoundError(
-            f"Не найден {ANONYMIZER_PATH}. Положите run_regression_tests.py в корень проекта рядом с 1_anonymize.py."
+            f"Не найден {ANONYMIZER_PATH}. Положите run_regression_tests.py в корень проекта рядом с pseudonymize.py."
         )
     spec = importlib.util.spec_from_file_location("anonymizer_under_test", ANONYMIZER_PATH)
     if spec is None or spec.loader is None:
-        raise RuntimeError("Не удалось загрузить 1_anonymize.py как модуль.")
+        raise RuntimeError("Не удалось загрузить pseudonymize.py как модуль.")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -624,7 +624,7 @@ def run_tests(include_known_gaps_as_failures: bool = False) -> None:
         print("Нет regression cases. Сначала выполните: python run_regression_tests.py seed")
         return
 
-    print("Загрузка текущего 1_anonymize.py для тестов...")
+    print("Загрузка текущего pseudonymize.py для тестов...")
     anonymizer = load_anonymizer_module()
     rules = anonymizer.load_all_rules()
 

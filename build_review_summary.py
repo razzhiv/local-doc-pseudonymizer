@@ -75,7 +75,7 @@ def make_markdown(cases, report_json):
         lines.append("Это может означать одно из двух:")
         lines.append("")
         lines.append("1. В последнем прогоне не было `SUSPECT_ENTITY` / `NEEDS_REVIEW`.")
-        lines.append("2. `1_anonymize.py` ещё не писал auto-cases или файл был очищен.")
+        lines.append("2. `pseudonymize.py` ещё не писал auto-cases или файл был очищен.")
         lines.append("")
         return "\n".join(lines)
 
