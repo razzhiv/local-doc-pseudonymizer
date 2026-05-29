@@ -30,6 +30,7 @@ from natasha import Segmenter, NewsEmbedding, NewsNERTagger, Doc
 # - Sprint 0.5: добавлен guard от ложного ACCOUNT внутри УИД/служебных номеров.
 # - Sprint 0.6: добавлен контекстный ИНН с пробелами/дефисами и OCR-suspect ИНН с З/О.
 # - Sprint 1.1: добавлен первый quality pack для SNILS, паспортов, реквизитов, адресов и дат.
+# - Sprint 1.2: добавлен минимальный English profile для явных английских labels.
 # ============================================================
 
 INPUT_DIR = "input"
@@ -111,7 +112,7 @@ BANK_KEYWORDS = [
     "газпромбанк", "райффайзен", "росбанк", "совкомбанк", "почта банк"
 ]
 
-PRIVATE_ORG_PREFIXES = ["ООО", "АО", "ПАО", "ЗАО", "ОАО", "АНО", "НКО"]
+PRIVATE_ORG_PREFIXES = ["ООО", "АО", "ПАО", "ЗАО", "ОАО", "АНО", "НКО", "LLC", "LTD", "INC", "JSC"]
 
 
 # ------------------------------------------------------------
@@ -570,7 +571,9 @@ DEFAULT_NON_CARD_CONTEXTS = [
 
 DEFAULT_PASSPORT_CONTEXTS = [
     "паспорт", "паспорта", "паспортные", "паспортный", "серия", "серии",
-    "выдан", "выдана", "выдано", "код подразделения"
+    "выдан", "выдана", "выдано", "код подразделения",
+    "passport", "passport no", "passport number", "passport details",
+    "issued", "issued on", "date of issue"
 ]
 
 DEFAULT_ACCOUNT_CONTEXTS = [
@@ -578,7 +581,8 @@ DEFAULT_ACCOUNT_CONTEXTS = [
     "р/с", "р\с", "расч. сч", "банковский счёт", "банковский счет",
     "корреспондентский счёт", "корреспондентский счет", "к/с", "к\с",
     "счет получателя", "счёт получателя", "счет плательщика", "счёт плательщика",
-    "лицевой счет", "лицевой счёт", "банк"
+    "лицевой счет", "лицевой счёт", "банк",
+    "bank account", "account number", "beneficiary account", "correspondent account"
 ]
 
 
@@ -858,7 +862,7 @@ def add_contextual_spaced_digits_finding(findings, text, label_pattern, digit_co
     `ОГРН: 102 770 013 2195`. Без явной метки такие числа не маскируются,
     чтобы не ломать номера актов, сертификатов и обращений.
     """
-    pattern = rf"\b(?:{label_pattern})\b[\s:№-]*((?:\d[\s-]*){{{digit_count - 1}}}\d)(?![\s-]*\d)"
+    pattern = rf"\b(?:{label_pattern})\b[\s:№#-]*((?:\d[\s-]*){{{digit_count - 1}}}\d)(?![\s-]*\d)"
     for m in re.finditer(pattern, text, flags=re.IGNORECASE):
         candidate = m.group(1)
         normalized = normalize_inn_candidate_digits(candidate)
@@ -877,7 +881,7 @@ def find_private_org_by_prefix(text):
     скрываем название после неё.
     """
     findings = []
-    prefix_pattern = r"ООО|АО|ПАО|ЗАО|ОАО|АНО|НКО"
+    prefix_pattern = r"ООО|АО|ПАО|ЗАО|ОАО|АНО|НКО|LLC|LTD|INC|JSC"
     name_token = r"[А-ЯЁA-Z0-9][А-ЯЁA-Zа-яёa-z0-9&.\-]*"
     name_pattern = rf"{name_token}(?:\s+{name_token}){{0,4}}"
     pattern = rf"\b(?:{prefix_pattern})\s+[\"«“]?({name_pattern})[\"»”]?"
@@ -889,7 +893,7 @@ def find_private_org_by_prefix(text):
         "regex_private_org_prefix",
         flags=re.IGNORECASE,
         group=1,
-        comment="Частная организация по явному префиксу ООО/АО/ПАО"
+        comment="Частная организация по явному префиксу ООО/АО/ПАО/LLC/Ltd"
     )
     return findings
 
@@ -909,9 +913,20 @@ def find_regex_entities(text):
         comment="Паспорт РФ: серия и номер в раздельных полях"
     )
 
+    add_pattern_findings(
+        findings,
+        text,
+        r"\b(?:passport|passport\s+no\.?|passport\s+number|passport\s+details)\b[^\n;]{0,40}?((?:\d{2}\s?\d{2})[^\d\n;]{0,15}\d{6}|\d{4}\s?\d{6})\b",
+        "PASSPORT", "regex_passport_en_context", flags=re.IGNORECASE, group=1,
+        comment="Passport number near English passport label"
+    )
+
     # ИНН/ОГРН/ОГРНИП/КПП — по контексту, чтобы не ломать номера договоров и актов
     add_pattern_findings(findings, text, r"\bИНН\b[\s:№-]*(\d{10}|\d{12})\b", "INN", "regex_inn_context", flags=re.IGNORECASE, group=1, comment="ИНН")
+    add_pattern_findings(findings, text, r"\b(?:INN|TIN|Tax\s+ID|Taxpayer\s+ID)\b[\s:№#-]*(\d{10}|\d{12})\b", "INN", "regex_inn_en_context", flags=re.IGNORECASE, group=1, comment="INN/TIN/Tax ID near English label")
     add_spaced_inn_findings(findings, text)
+    add_contextual_spaced_digits_finding(findings, text, r"INN|TIN|Tax\s+ID|Taxpayer\s+ID", 10, "INN", "regex_inn_en_context_spaced", comment="INN/TIN/Tax ID with spaces near English label")
+    add_contextual_spaced_digits_finding(findings, text, r"INN|TIN|Tax\s+ID|Taxpayer\s+ID", 12, "INN", "regex_inn_en_context_spaced", comment="INN/TIN/Tax ID with spaces near English label")
     add_ocr_suspect_inn_findings(findings, text)
     add_pattern_findings(findings, text, r"\bОГРН\b[\s:№-]*(\d{13})\b", "OGRN", "regex_ogrn_context", flags=re.IGNORECASE, group=1, comment="ОГРН")
     add_contextual_spaced_digits_finding(findings, text, "ОГРН", 13, "OGRN", "regex_ogrn_context_spaced", comment="ОГРН с пробелами/дефисами")
@@ -954,8 +969,8 @@ def find_regex_entities(text):
     )
     add_pattern_findings(
         findings, text,
-        r"\b(?:телефон|тел\.?|контактный\s+телефон|моб\.?|мобильный(?:\s+телефон)?)\b[\s:№-]*(\(?\d{3,5}\)?[\s\-]*\d[\d\s\-]{4,10}(?:\s*,?\s*(?:доб\.?|доб|доп\.?)\s*\d+)?)",
-        "PHONE", "regex_phone_context", flags=re.IGNORECASE, group=1, comment="Телефон по контексту"
+        r"\b(?:телефон|тел\.?|контактный\s+телефон|моб\.?|мобильный(?:\s+телефон)?|phone|mobile|cell(?:\s+phone)?|contact\s+phone|tel\.?)\b[\s:№#-]*(\(?\d{3,5}\)?[\s\-]*\d[\d\s\-]{4,10}(?:\s*,?\s*(?:доб\.?|доб|доп\.?|ext\.?)\s*\d+)?)",
+        "PHONE", "regex_phone_context", flags=re.IGNORECASE, group=1, comment="Телефон по контексту / phone by context"
     )
 
     add_pattern_findings(findings, text, r"(?<!\w)@[A-Za-z0-9_]{5,32}\b", "USERNAME", "regex_username", comment="Username / Telegram")
@@ -969,6 +984,12 @@ def find_regex_entities(text):
         r"\b(?:адрес|адрес\s+регистрации|место\s+жительства|место\s+регистрации)\b[^\n;]{0,60}?(\d{6})(?=[,\s])",
         "POST_INDEX", "regex_post_index_address_context", flags=re.IGNORECASE, group=1,
         comment="Почтовый индекс после адресного контекста"
+    )
+    add_pattern_findings(
+        findings, text,
+        r"\b(?:address|registered\s+address|residential\s+address|place\s+of\s+residence)\b[^\n;]{0,60}?(\d{6})(?=[,\s])",
+        "POST_INDEX", "regex_post_index_en_address_context", flags=re.IGNORECASE, group=1,
+        comment="Postal index after English address context"
     )
     # Индекс, приклеенный к адресу/OCR-тексту: 123456ТестоваяОбласть...
     add_pattern_findings(findings, text, r"(?<!\d)(\d{6})(?=\s*[,;]?\s*(?:РФ|Россия|Российская|[А-ЯЁа-яё]+ская\s+обл|[А-ЯЁа-яё]+ская\s+область|[А-ЯЁа-яё]+ская|г\.?\s*[А-ЯЁ]))", "POST_INDEX", "regex_post_index_address_attached", flags=re.IGNORECASE, group=1, comment="Почтовый индекс перед адресом")
@@ -1031,7 +1052,34 @@ def find_address_details(text):
         rf"(?i)\b(?:адрес|место\s+жительства|место\s+регистрации|зарегистрирован(?:а)?\s+по\s+адресу)"
         rf"[^\n;]{{0,100}}?((?:дом|д\.?)\s*[^,\n;\.]+(?:[,;]\s*(?:{detail_markers})\s*[^,\n;\.]*)*)"
     )
-    add_pattern_findings(findings, text, address_context_tail, "ADDRESS_DETAIL", "regex_address_context_tail", flags=re.IGNORECASE, group=1, comment="Адресная детализация после слова 'адрес'")
+    # Minimal English address profile: keep country/region/city context, hide street/building/apartment tail.
+    english_street_markers = (
+        r"street|st\.?|avenue|ave\.?|road|rd\.?|lane|ln\.?|prospect|"
+        r"boulevard|blvd\.?|drive|dr\.?|square|sq\.?|embankment"
+    )
+    english_detail_markers = (
+        r"building|bldg\.?|house|apt\.?|apartment|flat|office|suite|unit|room"
+    )
+    english_address_tail = (
+        rf"(?i)\b(?:{english_street_markers})\s+[^,\n;\.]+"
+        rf"(?:[,;]\s*(?:{english_detail_markers})\s*[^,\n;\.]*)*"
+    )
+    add_pattern_findings(findings, text, english_address_tail, "ADDRESS_DETAIL", "regex_address_tail_en", flags=re.IGNORECASE, comment="English address tail")
+
+    english_reverse_street_tail = (
+        rf"(?i)\b([A-Z][A-Za-z0-9.\-]*"
+        rf"(?:\s+[A-Z][A-Za-z0-9.\-]*){{0,3}}\s+"
+        rf"(?:{english_street_markers})"
+        rf"(?:[,;]\s*(?:{english_detail_markers})\s*[^,\n;\.]*)*)"
+    )
+    add_pattern_findings(findings, text, english_reverse_street_tail, "ADDRESS_DETAIL", "regex_reverse_address_tail_en", flags=re.IGNORECASE, group=1, comment="English address tail: street name before marker")
+
+    english_address_context_tail = (
+        rf"(?i)\b(?:address|registered\s+address|residential\s+address|place\s+of\s+residence)"
+        rf"[^\n;]{{0,120}}?((?:building|bldg\.?|house|apt\.?|apartment|flat|office|suite|unit|room)"
+        rf"\s*[^,\n;\.]+(?:[,;]\s*(?:{english_detail_markers})\s*[^,\n;\.]*)*)"
+    )
+    add_pattern_findings(findings, text, english_address_context_tail, "ADDRESS_DETAIL", "regex_address_context_tail_en", flags=re.IGNORECASE, group=1, comment="English address detail after address context")
 
     return findings
 
@@ -1051,13 +1099,28 @@ def find_sensitive_dates(text):
     )
     add_pattern_findings(
         findings, text,
+        r"(?i)(?:date\s+of\s+birth|birth\s+date|DOB)\s*[:№#-]?\s*" + date,
+        "DATE_BIRTH", "regex_date_birth_en", flags=re.IGNORECASE, group=1, comment="Date of birth"
+    )
+    add_pattern_findings(
+        findings, text,
         r"(?i)(?:дата\s+выдачи|паспорт\s+выдан|выдан(?:о|а)?)\D{0,80}?" + date,
         "DATE_DOC_ISSUE", "regex_date_doc_issue", flags=re.IGNORECASE, group=1, comment="Дата выдачи документа"
     )
     add_pattern_findings(
         findings, text,
+        r"(?i)(?:date\s+of\s+issue|issued\s+on|passport\s+issued)\D{0,80}?" + date,
+        "DATE_DOC_ISSUE", "regex_date_doc_issue_en", flags=re.IGNORECASE, group=1, comment="Document issue date"
+    )
+    add_pattern_findings(
+        findings, text,
         r"(?i)(?:зарегистрирован(?:а)?|регистрация\s+по\s+месту\s+жительства|дата\s+регистрации)\D{0,80}?" + date,
         "DATE_REGISTRATION", "regex_date_registration", flags=re.IGNORECASE, group=1, comment="Дата регистрации"
+    )
+    add_pattern_findings(
+        findings, text,
+        r"(?i)(?:registration\s+date|registered\s+on|date\s+of\s+registration)\D{0,80}?" + date,
+        "DATE_REGISTRATION", "regex_date_registration_en", flags=re.IGNORECASE, group=1, comment="Registration date"
     )
     add_pattern_findings(
         findings, text,
@@ -1079,6 +1142,42 @@ def is_public_org(name):
 def is_bank(name):
     n = name.lower()
     return any(k in n for k in BANK_KEYWORDS)
+
+
+def is_probable_english_address_location(text, start, end):
+    """Skip Natasha ORG false positives for city/location words inside English address lines.
+
+    The minimal English profile should keep city context such as
+    `Registered address: 190000, Saint Petersburg, ...` while hiding
+    postal index and street/building/apartment details.
+    """
+    value = text[start:end].strip()
+    if not value:
+        return False
+
+    # Only guard Latin title-case location-like spans. Do not affect Russian ORG rules.
+    if re.search(r"[?-??-???]", value):
+        return False
+    if not re.fullmatch(r"[A-Z][A-Za-z.\-]*(?:\s+[A-Z][A-Za-z.\-]*){0,3}", value):
+        return False
+
+    left = text[max(0, start - 120):start].lower()
+    right = text[end:min(len(text), end + 140)].lower()
+
+    has_address_label = re.search(
+        r"\b(address|registered\s+address|residential\s+address|place\s+of\s+residence)\b",
+        left,
+    )
+    if not has_address_label:
+        return False
+
+    has_address_tail = re.search(
+        r"\b(street|st\.?|avenue|ave\.?|road|rd\.?|lane|ln\.?|prospect|"
+        r"boulevard|blvd\.?|drive|dr\.?|square|sq\.?|embankment|"
+        r"building|bldg\.?|house|apt\.?|apartment|flat|office|suite|unit|room)\b",
+        right,
+    )
+    return bool(has_address_tail)
 
 
 def split_private_org_preserve_form(name):
@@ -1140,6 +1239,21 @@ def find_role_based_persons(text):
         "PERSON", "regex_patronymic_field", flags=re.IGNORECASE, group=1, comment="Отчество в явном поле"
     )
 
+    english_person_value = (
+        r"[A-Z][a-z]+(?:-[A-Z][a-z]+)?"
+        r"(?:\s+[A-Z][a-z]+(?:-[A-Z][a-z]+)?){1,2}"
+    )
+    english_person_label = (
+        r"full\s+name|applicant|representative|contact\s+person|"
+        r"authorized\s+person|director|beneficiary"
+    )
+    add_pattern_findings(
+        findings, text,
+        rf"(?i)\b(?:{english_person_label})\b[\s:№#-]+({english_person_value})",
+        "PERSON", "regex_english_labeled_person", flags=re.IGNORECASE, group=1,
+        comment="English labeled person name"
+    )
+
     return findings
 
 
@@ -1160,6 +1274,8 @@ def find_natasha_entities(text):
                 findings.append(item)
 
         elif span.type == "ORG":
+            if is_probable_english_address_location(text, span.start, span.stop):
+                continue
             if is_public_org(value):
                 continue
             if is_bank(value):
