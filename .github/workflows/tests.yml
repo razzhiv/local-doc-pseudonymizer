@@ -25,3 +25,7 @@ jobs:
       - name: Run synthetic regression tests
         run: |
           python run_regression_tests.py run-strict
+
+      - name: Run document-level regression tests
+        run: |
+          python -m pytest -q tests/test_document_level_regression.py

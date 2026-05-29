@@ -191,13 +191,13 @@ Closed in Sprint 0.6:
 
 The public repository uses a synthetic regression corpus only.
 
-Current baseline:
+Current text-block baseline:
 
 ```text
 PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
 ```
 
-Run tests:
+Run text-block regression tests:
 
 ```bash
 python run_regression_tests.py run-strict
@@ -208,6 +208,14 @@ or on Windows:
 ```bat
 run_regression_tests.bat
 ```
+
+Run document-level regression tests for generated DOCX/PDF fixtures:
+
+```bash
+python -m pytest -q tests/test_document_level_regression.py
+```
+
+The document-level suite covers DOCX paragraphs, DOCX table context, text-layer PDFs, image-only PDF safe failure, and partially processed PDFs.
 
 ## Human review workflow
 
