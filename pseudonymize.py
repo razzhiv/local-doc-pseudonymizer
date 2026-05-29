@@ -1392,22 +1392,62 @@ def process_docx(filepath, filename, project_dictionary, rules):
 def process_pdf(filepath, filename, project_dictionary, rules):
     file_report = {
         "summary": defaultdict(int),
+        "status": "pending",
         "warnings": [
-            "PDF преобразован в DOCX простым текстом. Сложная верстка PDF не сохраняется.",
-            "Изображения и сканы внутри PDF на v0.1 не проверяются."
+            "PDF преобразуется в DOCX простым текстом. Сложная верстка PDF не сохраняется.",
+            "PDF на v0.1 обрабатывается только по извлекаемому текстовому слою. OCR не выполняется."
         ],
+        "pdf_extraction": {
+            "pages_total": 0,
+            "pages_with_text": 0,
+            "pages_without_text": [],
+            "chars_by_page": [],
+            "total_extracted_chars": 0,
+        },
         "replacements": [],
         "skipped": [],
         "review_cases": []
     }
 
     lines = []
+    extraction = file_report["pdf_extraction"]
+
     with pdfplumber.open(filepath) as pdf:
+        extraction["pages_total"] = len(pdf.pages)
         for page_num, page in enumerate(pdf.pages, start=1):
             extracted = page.extract_text() or ""
-            if extracted.strip():
+            stripped = extracted.strip()
+            chars = len(stripped)
+
+            extraction["chars_by_page"].append({
+                "page": page_num,
+                "chars": chars,
+            })
+            extraction["total_extracted_chars"] += chars
+
+            if stripped:
+                extraction["pages_with_text"] += 1
                 anonymized = anonymize_text_block(extracted, filename, f"pdf_page_{page_num}", project_dictionary, file_report, rules)
                 lines.append(anonymized)
+            else:
+                extraction["pages_without_text"].append(page_num)
+
+    if extraction["total_extracted_chars"] == 0:
+        file_report["status"] = "not_processed_no_text_layer"
+        file_report["warnings"].append(
+            "В PDF не найден извлекаемый текстовый слой. Вероятно, это скан, изображение или PDF без text layer. "
+            "Anonymized DOCX не создан, чтобы не создавать ложное ощущение успешной обработки."
+        )
+        return file_report, None
+
+    if extraction["pages_without_text"]:
+        file_report["status"] = "partially_processed_text_layer"
+        file_report["warnings"].append(
+            "Часть страниц PDF не содержит извлекаемого текста и не была проверена: "
+            + ", ".join(str(x) for x in extraction["pages_without_text"])
+        )
+    else:
+        file_report["status"] = "processed_text_layer"
 
     out_doc = docx.Document()
     for block in lines:
@@ -1429,7 +1469,9 @@ def normalize_report_for_json(report):
     for filename, data in report["files"].items():
         normalized["files"][filename] = {
             "summary": dict(data["summary"]),
+            "status": data.get("status", "processed"),
             "warnings": data.get("warnings", []),
+            "pdf_extraction": data.get("pdf_extraction"),
             "replacements": data.get("replacements", []),
             "skipped": data.get("skipped", []),
             "review_cases": data.get("review_cases", [])
@@ -1524,6 +1566,21 @@ def save_markdown_report(report):
     for filename, data in report["files"].items():
         lines.append(f"### {filename}")
         lines.append("")
+        if data.get("status"):
+            lines.append(f"Статус обработки: `{data.get('status')}`")
+            lines.append("")
+
+        pdf_extraction = data.get("pdf_extraction")
+        if pdf_extraction:
+            lines.append("PDF text-layer extraction:")
+            lines.append(f"- страниц всего: {pdf_extraction.get('pages_total', 0)}")
+            lines.append(f"- страниц с текстом: {pdf_extraction.get('pages_with_text', 0)}")
+            lines.append(f"- извлечено символов: {pdf_extraction.get('total_extracted_chars', 0)}")
+            if pdf_extraction.get("pages_without_text"):
+                pages = ", ".join(str(x) for x in pdf_extraction.get("pages_without_text", []))
+                lines.append(f"- страницы без text layer: {pages}")
+            lines.append("")
+
         if data.get("summary"):
             lines.append("Замены:")
             for entity_type, count in sorted(data["summary"].items()):
@@ -1573,6 +1630,21 @@ def save_docx_report(report):
 
     for filename, data in report["files"].items():
         report_doc.add_heading(f"Файл: {filename}", level=2)
+
+        if data.get("status"):
+            report_doc.add_paragraph(f"Статус обработки: {data.get('status')}")
+
+        pdf_extraction = data.get("pdf_extraction")
+        if pdf_extraction:
+            report_doc.add_paragraph(
+                "PDF text-layer extraction: "
+                f"страниц всего {pdf_extraction.get('pages_total', 0)}, "
+                f"страниц с текстом {pdf_extraction.get('pages_with_text', 0)}, "
+                f"извлечено символов {pdf_extraction.get('total_extracted_chars', 0)}."
+            )
+            if pdf_extraction.get("pages_without_text"):
+                pages = ", ".join(str(x) for x in pdf_extraction.get("pages_without_text", []))
+                report_doc.add_paragraph(f"Страницы без text layer: {pages}")
 
         report_doc.add_heading("1. Сводка", level=3)
         if data["summary"]:
@@ -1686,10 +1758,14 @@ def main():
                 file_report, out_path = process_pdf(filepath, filename, project_dictionary, rules)
 
             full_report["files"][filename] = file_report
-            print(f"  Готово: {out_path}")
+            if out_path:
+                print(f"  Готово: {out_path}")
+            else:
+                print(f"  DOCX не создан: {file_report.get('status', 'not_processed')}")
         except Exception as e:
             full_report["files"][filename] = {
                 "summary": defaultdict(int),
+                "status": "processing_error",
                 "warnings": [f"Ошибка обработки файла: {e}"],
                 "replacements": [],
                 "skipped": [],

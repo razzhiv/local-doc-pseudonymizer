@@ -25,6 +25,8 @@ Some formatting may be simplified during processing.
 
 PDF is a visual format, not a semantic text format.
 
+In v0.1-alpha, BeforeSending only processes the extractable text layer of a PDF.
+
 PDF text extraction may lose:
 
 - spacing;
@@ -33,9 +35,13 @@ PDF text extraction may lose:
 - headers / footers;
 - hidden text layers.
 
+If a PDF has no extractable text layer, BeforeSending reports `not_processed_no_text_layer` and does not create an anonymized DOCX for that file. This is intentional: an empty output document must not be treated as a successfully processed document.
+
+If only some pages contain extractable text, BeforeSending reports `partially_processed_text_layer` and lists the pages without extractable text in the report.
+
 ## No OCR in v0.1-alpha
 
-Scanned PDFs, photos, handwritten text and embedded images are not processed.
+Scanned PDFs, photos, handwritten text and embedded images are not processed. OCR is not performed in v0.1-alpha.
 
 ## False positives and false negatives
 
