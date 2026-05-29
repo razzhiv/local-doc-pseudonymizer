@@ -1,5 +1,41 @@
 # SPRINT 0 STATUS
 
+## Sprint 0.8-1.1 checkpoint - 2026-05-30
+
+Status: completed and merged into `main`.
+
+Closed sprints:
+
+- Sprint 0.8 - PDF safe handling
+  - PDFs without an extractable text layer no longer silently produce an empty anonymized DOCX.
+  - PDF extraction metadata and status reporting were added.
+
+- Sprint 0.9 - DOCX table-aware context
+  - DOCX table cells are now processed with row/column label context.
+  - Values such as INN and birth dates in tables are better detected when labels are stored in neighboring cells.
+
+- Sprint 1.0 - document-level regression tests
+  - Added end-to-end pytest coverage for DOCX and PDF workflows.
+  - Added tests for DOCX paragraph masking, DOCX table masking, text-layer PDFs, image-only PDFs, and partial PDF processing.
+
+- Sprint 1.1 - recognition quality pack
+  - Added 10 new synthetic recognition cases.
+  - Current synthetic regression baseline increased from 34 to 44 passing cases.
+
+Current verified baseline:
+
+- Synthetic regression: PASS 44 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 44
+- Document-level regression: 5 passed
+
+Current next candidates:
+
+- Sprint 1.2 - minimal English profile
+- Additional Russian recognition quality packs based on future synthetic false-negative reports
+- PDF table extraction as a later experimental track
+- OCR remains out of scope until the text-layer PDF/DOCX pipeline is stable
+
+
+
 _Проект: локальная псевдонимизация / masking документов перед передачей в SaaS / LLM / третьим лицам_
 
 _Статус на 2026-05-01: Sprint 0.2 и базовый Sprint 0.3 успешно пройдены._
