@@ -23,7 +23,7 @@ Current public status: `v0.1-alpha` / experimental MVP.
 Synthetic regression baseline:
 
 ```text
-PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
+PASS 44 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 44
 Blocking errors: 0
 ```
 
@@ -45,6 +45,7 @@ It uses:
 - replacement reports;
 - human-in-the-loop review;
 - synthetic regression tests;
+- document-level regression tests;
 - controlled rule improvement workflow.
 
 ## What this project is not
@@ -187,6 +188,10 @@ Closed in Sprint 0.6:
 - INN with spaces;
 - INN with OCR-letter substitution.
 
+Added in Sprint 1.1:
+
+- first recognition quality pack for spaced SNILS, separated passport series/number, spaced BIK/KPP/OGRN, quoted private organizations, address index context, one-digit sensitive dates, and mobile phone context.
+
 ## Synthetic regression tests
 
 The public repository uses a synthetic regression corpus only.
@@ -194,7 +199,7 @@ The public repository uses a synthetic regression corpus only.
 Current text-block baseline:
 
 ```text
-PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
+PASS 44 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 44
 ```
 
 Run text-block regression tests:
@@ -216,6 +221,8 @@ python -m pytest -q tests/test_document_level_regression.py
 ```
 
 The document-level suite covers DOCX paragraphs, DOCX table context, text-layer PDFs, image-only PDF safe failure, and partially processed PDFs.
+
+For safe future recognition improvements, see `docs/recognition_quality_backlog.md`.
 
 ## Human review workflow
 

@@ -29,6 +29,7 @@ from natasha import Segmenter, NewsEmbedding, NewsNERTagger, Doc
 # - Sprint 0.5: добавлен guard от ложного PASSPORT внутри служебных номеров.
 # - Sprint 0.5: добавлен guard от ложного ACCOUNT внутри УИД/служебных номеров.
 # - Sprint 0.6: добавлен контекстный ИНН с пробелами/дефисами и OCR-suspect ИНН с З/О.
+# - Sprint 1.1: добавлен первый quality pack для SNILS, паспортов, реквизитов, адресов и дат.
 # ============================================================
 
 INPUT_DIR = "input"
@@ -849,24 +850,79 @@ def add_ocr_suspect_inn_findings(findings, text):
         if item:
             findings.append(item)
 
+
+def add_contextual_spaced_digits_finding(findings, text, label_pattern, digit_count, entity_type, method, comment=""):
+    """Находит длинные числовые идентификаторы с пробелами/дефисами рядом с явной меткой.
+
+    Это controlled-fix для реквизитов вроде `БИК: 044 525 225` или
+    `ОГРН: 102 770 013 2195`. Без явной метки такие числа не маскируются,
+    чтобы не ломать номера актов, сертификатов и обращений.
+    """
+    pattern = rf"\b(?:{label_pattern})\b[\s:№-]*((?:\d[\s-]*){{{digit_count - 1}}}\d)(?![\s-]*\d)"
+    for m in re.finditer(pattern, text, flags=re.IGNORECASE):
+        candidate = m.group(1)
+        normalized = normalize_inn_candidate_digits(candidate)
+        if len(normalized) != digit_count or not normalized.isdigit():
+            continue
+        item = make_finding(text, m.start(1), m.end(1), entity_type, method, comment)
+        if item:
+            findings.append(item)
+
+
+def find_private_org_by_prefix(text):
+    """Дополнительный regex для частных организаций с явным префиксом.
+
+    Natasha иногда пропускает короткие/условные названия в кавычках:
+    `ООО «Ромашка-Сервис»`. Сохраняем организационно-правовую форму, но
+    скрываем название после неё.
+    """
+    findings = []
+    prefix_pattern = r"ООО|АО|ПАО|ЗАО|ОАО|АНО|НКО"
+    name_token = r"[А-ЯЁA-Z0-9][А-ЯЁA-Zа-яёa-z0-9&.\-]*"
+    name_pattern = rf"{name_token}(?:\s+{name_token}){{0,4}}"
+    pattern = rf"\b(?:{prefix_pattern})\s+[\"«“]?({name_pattern})[\"»”]?"
+    add_pattern_findings(
+        findings,
+        text,
+        pattern,
+        "ORG_PRIVATE",
+        "regex_private_org_prefix",
+        flags=re.IGNORECASE,
+        group=1,
+        comment="Частная организация по явному префиксу ООО/АО/ПАО"
+    )
+    return findings
+
 def find_regex_entities(text):
     findings = []
 
     # Строгие идентификаторы
     add_pattern_findings(findings, text, r"\b\d{2}\s?\d{2}\s?\d{6}\b", "PASSPORT", "regex_passport", comment="Паспорт РФ, серия/номер")
     add_pattern_findings(findings, text, r"\b\d{3}-\d{3}\b", "DIVISION_CODE", "regex_division_code", comment="Код подразделения")
-    add_pattern_findings(findings, text, r"\b\d{3}-\d{3}-\d{3}\s?\d{2}\b", "SNILS", "regex_snils", comment="СНИЛС")
+    add_pattern_findings(findings, text, r"\b(?:код\s+подразделения)\b[\s:№-]*(\d{3}[\s-]\d{3})\b", "DIVISION_CODE", "regex_division_code_context_spaced", flags=re.IGNORECASE, group=1, comment="Код подразделения с пробелом")
+    add_pattern_findings(findings, text, r"\b\d{3}[\s-]\d{3}[\s-]\d{3}\s?\d{2}\b", "SNILS", "regex_snils", comment="СНИЛС")
+    add_pattern_findings(
+        findings,
+        text,
+        r"\b(?:паспорт|паспорта|паспортные\s+данные)\b[^\n;]{0,60}?\bсер(?:ия|ии)\b[\s:№-]*((?:\d{2}\s?\d{2})[^\d\n;]{0,20}\d{6})\b",
+        "PASSPORT", "regex_passport_series_number_context", flags=re.IGNORECASE, group=1,
+        comment="Паспорт РФ: серия и номер в раздельных полях"
+    )
 
     # ИНН/ОГРН/ОГРНИП/КПП — по контексту, чтобы не ломать номера договоров и актов
     add_pattern_findings(findings, text, r"\bИНН\b[\s:№-]*(\d{10}|\d{12})\b", "INN", "regex_inn_context", flags=re.IGNORECASE, group=1, comment="ИНН")
     add_spaced_inn_findings(findings, text)
     add_ocr_suspect_inn_findings(findings, text)
     add_pattern_findings(findings, text, r"\bОГРН\b[\s:№-]*(\d{13})\b", "OGRN", "regex_ogrn_context", flags=re.IGNORECASE, group=1, comment="ОГРН")
+    add_contextual_spaced_digits_finding(findings, text, "ОГРН", 13, "OGRN", "regex_ogrn_context_spaced", comment="ОГРН с пробелами/дефисами")
     add_pattern_findings(findings, text, r"\bОГРНИП\b[\s:№-]*(\d{15})\b", "OGRNIP", "regex_ogrnip_context", flags=re.IGNORECASE, group=1, comment="ОГРНИП")
+    add_contextual_spaced_digits_finding(findings, text, "ОГРНИП", 15, "OGRNIP", "regex_ogrnip_context_spaced", comment="ОГРНИП с пробелами/дефисами")
     add_pattern_findings(findings, text, r"\bКПП\b[\s:№-]*(\d{9})\b", "KPP", "regex_kpp_context", flags=re.IGNORECASE, group=1, comment="КПП")
+    add_contextual_spaced_digits_finding(findings, text, "КПП", 9, "KPP", "regex_kpp_context_spaced", comment="КПП с пробелами/дефисами")
 
     # Банковские реквизиты
     add_pattern_findings(findings, text, r"\bБИК\b[\s:№-]*(\d{9})\b", "BIK", "regex_bik_context", flags=re.IGNORECASE, group=1, comment="БИК")
+    add_contextual_spaced_digits_finding(findings, text, "БИК", 9, "BIK", "regex_bik_context_spaced", comment="БИК с пробелами/дефисами")
     add_pattern_findings(findings, text, r"\b\d{20}\b", "ACCOUNT", "regex_20_digits", comment="20-значная последовательность, скрыта как банковский счёт")
 
     # Банковские карты: не считаем любую слитную 16-значную последовательность картой,
@@ -898,7 +954,7 @@ def find_regex_entities(text):
     )
     add_pattern_findings(
         findings, text,
-        r"\b(?:телефон|тел\.?|контактный\s+телефон|моб\.?)\b[\s:№-]*(\(?\d{3,5}\)?[\s\-]*\d[\d\s\-]{4,10}(?:\s*,?\s*(?:доб\.?|доб|доп\.?)\s*\d+)?)",
+        r"\b(?:телефон|тел\.?|контактный\s+телефон|моб\.?|мобильный(?:\s+телефон)?)\b[\s:№-]*(\(?\d{3,5}\)?[\s\-]*\d[\d\s\-]{4,10}(?:\s*,?\s*(?:доб\.?|доб|доп\.?)\s*\d+)?)",
         "PHONE", "regex_phone_context", flags=re.IGNORECASE, group=1, comment="Телефон по контексту"
     )
 
@@ -908,6 +964,12 @@ def find_regex_entities(text):
     # Адресные/объектные идентификаторы
     add_pattern_findings(findings, text, r"\b\d{2}:\d{2}:\d{5,7}:\d+\b", "CADASTRAL", "regex_cadastral", comment="Кадастровый номер")
     add_pattern_findings(findings, text, r"\b(?:индекс|почтовый\s+индекс)\b[\s:№-]*(\d{6})\b", "POST_INDEX", "regex_post_index_context", flags=re.IGNORECASE, group=1, comment="Почтовый индекс")
+    add_pattern_findings(
+        findings, text,
+        r"\b(?:адрес|адрес\s+регистрации|место\s+жительства|место\s+регистрации)\b[^\n;]{0,60}?(\d{6})(?=[,\s])",
+        "POST_INDEX", "regex_post_index_address_context", flags=re.IGNORECASE, group=1,
+        comment="Почтовый индекс после адресного контекста"
+    )
     # Индекс, приклеенный к адресу/OCR-тексту: 123456ТестоваяОбласть...
     add_pattern_findings(findings, text, r"(?<!\d)(\d{6})(?=\s*[,;]?\s*(?:РФ|Россия|Российская|[А-ЯЁа-яё]+ская\s+обл|[А-ЯЁа-яё]+ская\s+область|[А-ЯЁа-яё]+ская|г\.?\s*[А-ЯЁ]))", "POST_INDEX", "regex_post_index_address_attached", flags=re.IGNORECASE, group=1, comment="Почтовый индекс перед адресом")
 
@@ -953,7 +1015,8 @@ def find_address_details(text):
     reverse_street_tail = (
         rf"(?i)(?:^|[,;])\s*((?:\d+\s*)?[А-ЯЁA-Zа-яёa-z0-9][А-ЯЁA-Zа-яёa-z0-9\-]*"
         rf"(?:\s+[А-ЯЁA-Zа-яёa-z0-9][А-ЯЁA-Zа-яёa-z0-9\-]*){{0,3}}\s+"
-        rf"(?:{street_markers})\.?\s*,?\s*(?:д\.?)?\s*\d+[А-ЯЁA-Zа-яёa-z0-9/\\-]*)"
+        rf"(?:{street_markers})\.?\s*,?\s*(?:(?:д\.?|дом)\s*)?\d+[А-ЯЁA-Zа-яёa-z0-9/\\-]*"
+        rf"(?:[,;]\s*(?:{detail_markers})\s*[^,\n;\.]*)*)"
     )
     add_pattern_findings(findings, text, reverse_street_tail, "ADDRESS_DETAIL", "regex_reverse_street_tail", flags=re.IGNORECASE, group=1, comment="Адресный хвост: название улицы перед маркером")
 
@@ -966,7 +1029,7 @@ def find_address_details(text):
     # Если встречаются дом/квартира без улицы в явном адресном контексте.
     address_context_tail = (
         rf"(?i)\b(?:адрес|место\s+жительства|место\s+регистрации|зарегистрирован(?:а)?\s+по\s+адресу)"
-        rf"[^\n;:]{{0,100}}?((?:дом|д\.?)\s*[^,\n;\.]+(?:[,;]\s*(?:{detail_markers})\s*[^,\n;\.]*)*)"
+        rf"[^\n;]{{0,100}}?((?:дом|д\.?)\s*[^,\n;\.]+(?:[,;]\s*(?:{detail_markers})\s*[^,\n;\.]*)*)"
     )
     add_pattern_findings(findings, text, address_context_tail, "ADDRESS_DETAIL", "regex_address_context_tail", flags=re.IGNORECASE, group=1, comment="Адресная детализация после слова 'адрес'")
 
@@ -979,7 +1042,7 @@ def find_address_details(text):
 
 def find_sensitive_dates(text):
     findings = []
-    date = r"(\d{2}\.\d{2}\.\d{4})"
+    date = r"(\d{1,2}\.\d{1,2}\.\d{4})"
 
     add_pattern_findings(
         findings, text,
@@ -1118,6 +1181,7 @@ def find_natasha_entities(text):
     add_pattern_findings(findings, text, ip_pattern, "PERSON", "regex_ip_person", flags=re.IGNORECASE, group=1, comment="ИП: скрыто ФИО, форма ИП оставлена")
 
     findings.extend(find_role_based_persons(text))
+    findings.extend(find_private_org_by_prefix(text))
     return findings
 
 

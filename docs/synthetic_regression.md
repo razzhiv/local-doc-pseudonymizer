@@ -1,4 +1,4 @@
-﻿# Synthetic regression tests
+# Synthetic regression tests
 
 This project uses a synthetic regression corpus to verify masking behavior without using real personal or confidential data.
 
@@ -7,7 +7,7 @@ No real personal data should be included in public tests.
 ## Current baseline
 
 ```text
-PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
+PASS 44 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 44
 Blocking errors: 0
 ```
 
@@ -43,6 +43,8 @@ Former XFAIL cases fixed in Sprint 0.6:
 
 - INN with spaces;
 - INN with OCR-letter substitution.
+
+Sprint 1.1 adds the first recognition quality pack for common synthetic false negatives: spaced SNILS, separated passport series/number, spaced BIK/KPP/OGRN, quoted private organizations, address index context, one-digit sensitive dates, and mobile phone context.
 
 ## Adding tests
 
