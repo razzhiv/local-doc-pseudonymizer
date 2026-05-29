@@ -1349,6 +1349,90 @@ def anonymize_text_block(text, filename, block_name, project_dictionary, file_re
 # DOCX/PDF обработка
 # ------------------------------------------------------------
 
+
+TABLE_CONTEXT_LABEL_PATTERN = re.compile(
+    r"(?i)(?:"
+    r"\bфио\b|ф\.\s*и\.\s*о\.|\bфамилия\b|\bимя\b|\bотчество\b|"
+    r"\bистец\b|\bответчик\b|\bзаявитель\b|\bпредставитель\b|\bпотребитель\b|\bгражданин\b|\bгр\.\b|"
+    r"\bинн\b|\bогрн\b|\bогрнип\b|\bкпп\b|\bснилс\b|"
+    r"\bпаспорт\b|паспортн|серия|номер\s+паспорта|код\s+подразделения|"
+    r"телефон|тел\.|моб\.|email|e-mail|почта|"
+    r"адрес|место\s+жительства|место\s+регистрации|регистрац|"
+    r"дата\s+рождения|рождени|дата\s+выдачи|выдан|"
+    r"банк|бик|расч[её]тн|р/с|к/с|сч[её]т|карта|"
+    r"кадастров|индекс|трек|рпо|uid|уид|номер\s+дела|дело"
+    r")"
+)
+
+
+def normalize_table_context_label(value):
+    """Возвращает короткую безопасную метку строки/колонки для DOCX-таблиц.
+
+    Важно: не каждая первая ячейка строки является заголовком. В обычной
+    таблице первая колонка может содержать ФИО. Поэтому в контекст берём только
+    короткие label-like значения с известными маркерами: `ФИО`, `ИНН`,
+    `Паспорт`, `Адрес`, `Телефон` и т.п.
+    """
+    value = re.sub(r"\s+", " ", str(value or "")).strip(" \t\r\n:;№-–—")
+    if not value:
+        return ""
+    # Длинная ячейка почти наверняка не заголовок, а обычный текст.
+    if len(value) > 80:
+        return ""
+    if not TABLE_CONTEXT_LABEL_PATTERN.search(value):
+        return ""
+    return value
+
+
+def unique_context_labels(labels, cell_text=""):
+    """Удаляет пустые и дублирующиеся метки контекста для ячейки таблицы."""
+    result = []
+    seen = set()
+    cell_norm = normalize_for_rule_match(cell_text)
+
+    for label in labels:
+        label = normalize_table_context_label(label)
+        if not label:
+            continue
+        label_norm = normalize_for_rule_match(label)
+        if not label_norm or label_norm == cell_norm or label_norm in seen:
+            continue
+        seen.add(label_norm)
+        result.append(label)
+
+    return result
+
+
+def anonymize_table_cell_text(cell_text, context_labels, filename, block_name, project_dictionary, file_report, rules):
+    """Анонимизирует значение ячейки с учётом заголовка строки/колонки.
+
+    Пример: в таблице значение `473254765214` под заголовком `ИНН`
+    временно анализируется как `ИНН: 473254765214`, но в DOCX возвращается
+    только значение ячейки: `[INN_1]`. Это закрывает false negative, когда
+    контекст находится в соседней ячейке таблицы.
+    """
+    labels = unique_context_labels(context_labels, cell_text)
+    if not labels:
+        return anonymize_text_block(cell_text, filename, block_name, project_dictionary, file_report, rules)
+
+    prefix = " / ".join(labels) + ": "
+    contextual_text = prefix + cell_text
+    anonymized = anonymize_text_block(contextual_text, filename, block_name, project_dictionary, file_report, rules)
+
+    if anonymized.startswith(prefix):
+        return anonymized[len(prefix):]
+
+    # Защитный fallback: заголовки таблиц обычно не маскируются, но если формат
+    # неожиданно изменился, не вставляем служебный префикс обратно в документ.
+    if ": " in anonymized:
+        return anonymized.split(": ", 1)[1]
+
+    file_report["warnings"].append(
+        f"Не удалось безопасно удалить табличный контекст из блока {block_name}. Ячейка обработана без контекста."
+    )
+    return anonymize_text_block(cell_text, filename, block_name, project_dictionary, file_report, rules)
+
+
 def process_docx(filepath, filename, project_dictionary, rules):
     document = docx.Document(filepath)
     file_report = {
@@ -1365,11 +1449,42 @@ def process_docx(filepath, filename, project_dictionary, rules):
             para.text = anonymize_text_block(para.text, filename, f"paragraph_{i+1}", project_dictionary, file_report, rules)
 
     # Таблицы
+    # В DOCX табличный контекст часто находится не в самой ячейке, а в заголовке
+    # колонки или строки: например, значение `473254765214` стоит под колонкой
+    # `ИНН`. Поэтому для ячеек данных временно добавляем короткий контекст
+    # заголовка при анализе, но сохраняем в DOCX только исходное значение ячейки
+    # с заменами.
     for ti, table in enumerate(document.tables):
-        for ri, row in enumerate(table.rows):
+        rows = list(table.rows)
+        column_headers = []
+        if rows:
+            column_headers = [normalize_table_context_label(cell.text) for cell in rows[0].cells]
+
+        for ri, row in enumerate(rows):
+            row_header = ""
+            if row.cells:
+                row_header = normalize_table_context_label(row.cells[0].text)
+
             for ci, cell in enumerate(row.cells):
-                if cell.text:
-                    cell.text = anonymize_text_block(cell.text, filename, f"table_{ti+1}_r{ri+1}_c{ci+1}", project_dictionary, file_report, rules)
+                if not cell.text:
+                    continue
+
+                context_labels = []
+                if ri > 0 and ci < len(column_headers):
+                    context_labels.append(column_headers[ci])
+                if ci > 0:
+                    context_labels.append(row_header)
+
+                block_name = f"table_{ti+1}_r{ri+1}_c{ci+1}"
+                cell.text = anonymize_table_cell_text(
+                    cell.text,
+                    context_labels,
+                    filename,
+                    block_name,
+                    project_dictionary,
+                    file_report,
+                    rules,
+                )
 
     # Колонтитулы — обрабатываем по возможности
     for si, section in enumerate(document.sections):

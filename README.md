@@ -39,6 +39,7 @@ It helps reduce the risk of accidentally sending personal or confidential data t
 It uses:
 
 - local DOCX / text-layer PDF processing;
+- basic DOCX table context handling for row/column headers;
 - reversible token-based masking;
 - a local token dictionary;
 - replacement reports;
@@ -170,6 +171,8 @@ Known limitations:
 - PDFs without an extractable text layer are reported as `not_processed_no_text_layer`;
 - mixed PDFs may be reported as `partially_processed_text_layer` if some pages have no extractable text;
 - PDF text extraction may lose spacing, paragraph order or table structure;
+- DOCX table structure is preserved, but cell formatting may be simplified;
+- DOCX table values are checked with basic row/column header context where available;
 - DOCX formatting may split words internally across XML runs;
 - Russian morphology and legal drafting variations may cause missed detections;
 - contextual re-identification may remain possible after tokenization;
