@@ -67,3 +67,10 @@ Do not include:
 4. Change detection rules narrowly.
 5. Run strict regression and document-level tests.
 6. Commit only synthetic cases and code/docs changes.
+
+
+## English profile notes
+
+Sprint 1.2 adds only a minimal, label-driven English profile. Future backlog items should prefer synthetic examples with explicit labels and clear expected behavior, for example `Full name: John Smith` or `Tax ID: 473254765214`.
+
+This is not a full multilingual NER layer.

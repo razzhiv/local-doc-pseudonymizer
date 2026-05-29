@@ -19,7 +19,8 @@ Current support is experimental and rule-based / NLP-assisted.
 - cadastral numbers;
 - postal indexes with address context;
 - sensitive dates such as birth dates, registration dates and document issue dates;
-- address details such as street, house, apartment.
+- address details such as street, house, apartment;
+- minimal English-label cases for Full name, Passport No., Tax ID / TIN, Date of birth, Phone, Registered address and LLC/Ltd-style private organizations.
 
 ## Usually kept
 
@@ -44,3 +45,5 @@ Former synthetic XFAIL cases fixed in Sprint 0.6:
 - INN with OCR-letter substitution.
 
 Sprint 1.1 quality pack adds synthetic coverage for common formatting variants in SNILS, passports, BIK/KPP/OGRN, address context, mobile phones, private organizations and sensitive dates.
+
+Sprint 1.2 adds a minimal English profile. It is intentionally label-driven rather than a full English NER system.

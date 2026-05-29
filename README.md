@@ -23,7 +23,7 @@ Current public status: `v0.1-alpha` / experimental MVP.
 Synthetic regression baseline:
 
 ```text
-PASS 44 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 44
+PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
 Blocking errors: 0
 ```
 
@@ -46,6 +46,7 @@ It uses:
 - human-in-the-loop review;
 - synthetic regression tests;
 - document-level regression tests;
+- minimal English-label support for common personal-data fields;
 - controlled rule improvement workflow.
 
 ## What this project is not
@@ -199,7 +200,7 @@ The public repository uses a synthetic regression corpus only.
 Current text-block baseline:
 
 ```text
-PASS 44 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 44
+PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
 ```
 
 Run text-block regression tests:
