@@ -97,3 +97,5 @@ Thumbs.db
 /rules/public_orgs.txt
 /rules/private_org_markers.txt
 /MANIFEST_SHA256.txt
+
+.venv/

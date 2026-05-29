@@ -167,6 +167,8 @@ Known limitations:
 - only DOCX and text-layer PDFs are supported in v0.1-alpha;
 - scanned PDFs, photos, handwritten text and embedded images are not processed;
 - OCR is not included in v0.1-alpha;
+- PDFs without an extractable text layer are reported as `not_processed_no_text_layer`;
+- mixed PDFs may be reported as `partially_processed_text_layer` if some pages have no extractable text;
 - PDF text extraction may lose spacing, paragraph order or table structure;
 - DOCX formatting may split words internally across XML runs;
 - Russian morphology and legal drafting variations may cause missed detections;
