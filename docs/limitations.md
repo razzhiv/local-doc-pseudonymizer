@@ -19,7 +19,11 @@ Automated detection may produce:
 
 DOCX files may split visible words across internal XML runs. This can affect detection.
 
-Some formatting may be simplified during processing.
+DOCX table structure is preserved. For table data cells, BeforeSending uses short row/column header context where available. For example, a value under an `ИНН` column can be analyzed as an INN even when the label is in a neighboring header cell.
+
+This table context handling is basic and may miss complex/nested/merged-header layouts.
+
+Some cell and paragraph formatting may be simplified during processing.
 
 ## PDF limitations
 
