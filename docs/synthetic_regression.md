@@ -13,6 +13,8 @@ Blocking errors: 0
 
 ## Run tests
 
+Text-block synthetic regression suite:
+
 ```bash
 python run_regression_tests.py run-strict
 ```
@@ -22,6 +24,14 @@ or on Windows:
 ```bat
 run_regression_tests.bat
 ```
+
+Document-level regression suite for generated DOCX/PDF fixtures:
+
+```bash
+python -m pytest -q tests/test_document_level_regression.py
+```
+
+The document-level suite generates synthetic files during the test run. It does not store real or fixture DOCX/PDF files in the repository.
 
 ## XFAIL / known gaps
 
@@ -38,12 +48,19 @@ Former XFAIL cases fixed in Sprint 0.6:
 
 New tests should be synthetic and should avoid real personal data.
 
-Recommended structure:
+Recommended structure for text-block detection rules:
 
 - add a synthetic input case;
 - define expected token behavior;
 - include both positive and negative cases where possible;
 - run the regression tool before changing core detection logic.
+
+Recommended structure for document-level behavior:
+
+- generate DOCX/PDF fixtures inside pytest using synthetic values only;
+- avoid committing generated DOCX/PDF files;
+- assert both output content and processing status;
+- include safe-failure tests for unsupported inputs such as image-only PDFs.
 
 ## Notes
 
