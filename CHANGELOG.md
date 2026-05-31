@@ -577,7 +577,7 @@ Blocking errors: 0
 
 - No new core detection behavior was added in this cleanup step.
 - INN with spaces and INN OCR-letter substitution remain documented as former synthetic XFAIL cases fixed in Sprint 0.6.
-## 2026-05-06 � Sprint 0.7.1 � regression entrypoint cleanup
+## 2026-05-06 — Sprint 0.7.1 — regression entrypoint cleanup
 
 ### Changed
 
@@ -589,3 +589,57 @@ Blocking errors: 0
 
 - PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
 - Blocking errors: 0
+
+## 2026-05-30 — Sprint 0.8 through Sprint 1.2 checkpoint
+
+### Added / changed
+
+- Sprint 0.8 — PDF safe handling.
+- Sprint 0.9 — DOCX table-aware context.
+- Sprint 1.0 — document-level regression tests.
+- Sprint 1.1 — Russian recognition quality pack v1.
+- Sprint 1.2 — minimal label-driven English profile.
+
+### Regression baseline
+
+```text
+PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
+Document-level pytest: 5 passed
+```
+
+### Notes
+
+- Synthetic baseline increased from 34 to 44 cases in Sprint 1.1.
+- Synthetic baseline increased from 44 to 52 cases in Sprint 1.2.
+- No OCR support was added.
+
+## 2026-05-31 — release/docs hygiene checkpoint
+
+### Changed
+
+- Aligned README, STATUS, ROADMAP and VERSION_NOTE with the post-Sprint-1.2 baseline.
+- Updated `docs/review_workflow.md` from the older 34-case baseline to the current 52-case baseline.
+- Updated `docs/synthetic_regression_report_latest.md` with a fresh 52-case report.
+- Added `docs/release_checklist.md` for public-repository safety checks.
+- Expanded `docs/positioning.md` and `docs/token_dictionary_security.md` with clearer scope, reporting and dictionary-risk notes.
+
+### Verified
+
+```text
+python -m py_compile pseudonymize.py
+python run_regression_tests.py run-strict
+python -m pytest -q tests/test_document_level_regression.py
+```
+
+Result:
+
+```text
+PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
+Document-level pytest: 5 passed
+```
+
+### Safety notes
+
+- No real personal data was added.
+- No new core detection behavior was added in this docs/release hygiene checkpoint.
+- Future false negatives should continue to be rewritten into synthetic regression cases before rule changes.

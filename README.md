@@ -19,6 +19,7 @@ Local-first document pseudonymization / reversible masking / risk reduction for 
 ## Release status
 
 Current public status: `v0.1-alpha` / experimental MVP.
+Current working checkpoint: `v0.2-alpha candidate` docs/release hygiene; see [STATUS.md](STATUS.md).
 
 Synthetic regression baseline:
 
@@ -26,6 +27,8 @@ Synthetic regression baseline:
 PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
 Blocking errors: 0
 ```
+
+Document-level regression baseline: `5 passed`.
 
 This release is intended for early local testing and review-driven improvement. It is not production security software, a compliance solution, or a guarantee of complete anonymization.
 
@@ -91,6 +94,27 @@ input document
 → optional human review
 → optional token restoration
 ```
+
+
+## Example with synthetic data
+
+Input:
+
+```text
+Договор подписал Иванов Иван Иванович.
+ИНН: 770000000000
+Адрес регистрации: 190000, г. Санкт-Петербург, Невский проспект, д. 10, кв. 5.
+```
+
+Output:
+
+```text
+Договор подписал [PERSON_1].
+ИНН: [INN_1]
+Адрес регистрации: [POST_INDEX_1], г. Санкт-Петербург, [ADDRESS_DETAIL_1].
+```
+
+The mapping is stored locally in `project_dictionary.json`. This file is sensitive and must not be shared.
 
 ## Quick start
 
@@ -245,6 +269,34 @@ case
 Do not include real personal data, confidential documents, real INNs, passport numbers, addresses, contracts, screenshots or token dictionaries in GitHub issues or pull requests.
 
 Use synthetic examples only.
+
+
+## Documentation
+
+Key docs:
+
+- `STATUS.md` — current checkpoint and verified baseline.
+- `docs/positioning.md` — project scope and positioning.
+- `docs/limitations.md` — known limitations.
+- `docs/supported_entities.md` — experimental entity coverage.
+- `docs/token_dictionary_security.md` — dictionary/vault safety notes.
+- `docs/safe_bug_reports.md` — how to report missed detections safely.
+- `docs/release_checklist.md` — public release hygiene checklist.
+
+## How this differs from adjacent tools
+
+BeforeSending is not a generic PII SDK, not a browser extension, not an API firewall and not an enterprise DLP product.
+
+It focuses on a narrower document-first workflow:
+
+```text
+Russian-language legal/business documents
++ DOCX / text-layer PDF processing
++ local reversible token mapping
++ replacement report
++ human review
++ synthetic regression tests
+```
 
 ## License
 
