@@ -1,8 +1,8 @@
 # Regression report
 
-Дата: 2026-05-06T02:40:57
-Всего тестов: 34
-PASS: 34
+Дата: 2026-05-31T22:08:07
+Всего тестов: 52
+PASS: 52
 FAIL: 0
 XFAIL / known gaps: 0
 XPASS / unexpectedly fixed: 0
@@ -506,12 +506,12 @@ Phone-like номер после 'АКТ №' не должен скрывать
 **Output:**
 
 ```text
-Договор заключён с ООО [ORG_PRIVATE_1] на выполнение работ.
+Договор заключён с ООО [ORG_PRIVATE_1]
 ```
 
 **Actual replacements:**
 
-- ORG_PRIVATE: `Ромашка` → `[ORG_PRIVATE_1]` (natasha_org_private)
+- ORG_PRIVATE: `Ромашка на выполнение работ.` → `[ORG_PRIVATE_1]` (regex_private_org_prefix)
 
 ## PASS — test_public_org_ifns_negative_001
 
@@ -648,3 +648,365 @@ Sprint 0.6 guard: OCR-like value after Сертификат must not be treated 
 ```text
 Сертификат: 47325476521З
 ```
+
+## PASS — test_snils_spaces_positive_001
+
+Sprint 1.1: СНИЛС с пробелами должен скрываться как SNILS.
+
+**Input:**
+
+```text
+СНИЛС: 123 456 789 00
+```
+
+**Output:**
+
+```text
+СНИЛС: [SNILS_1]
+```
+
+**Actual replacements:**
+
+- SNILS: `123 456 789 00` → `[SNILS_1]` (regex_snils)
+
+## PASS — test_passport_series_number_separated_positive_001
+
+Sprint 1.1: паспортные серия и номер в раздельных полях должны скрываться как PASSPORT.
+
+**Input:**
+
+```text
+Паспорт РФ: серия 1234 № 567890 выдан отделом МВД.
+```
+
+**Output:**
+
+```text
+Паспорт РФ: серия [PASSPORT_1] выдан отделом МВД.
+```
+
+**Actual replacements:**
+
+- PASSPORT: `1234 № 567890` → `[PASSPORT_1]` (regex_passport_series_number_context)
+
+## PASS — test_division_code_spaced_context_positive_001
+
+Sprint 1.1: код подразделения с пробелом должен скрываться как DIVISION_CODE.
+
+**Input:**
+
+```text
+Код подразделения: 780 001.
+```
+
+**Output:**
+
+```text
+Код подразделения: [DIVISION_CODE_1].
+```
+
+**Actual replacements:**
+
+- DIVISION_CODE: `780 001` → `[DIVISION_CODE_1]` (regex_division_code_context_spaced)
+
+## PASS — test_bik_spaced_positive_001
+
+Sprint 1.1: БИК с пробелами должен скрываться как BIK рядом с явной меткой.
+
+**Input:**
+
+```text
+БИК: 044 525 225
+```
+
+**Output:**
+
+```text
+БИК: [BIK_1]
+```
+
+**Actual replacements:**
+
+- BIK: `044 525 225` → `[BIK_1]` (regex_bik_context_spaced)
+
+## PASS — test_kpp_spaced_positive_001
+
+Sprint 1.1: КПП с пробелами должен скрываться как KPP рядом с явной меткой.
+
+**Input:**
+
+```text
+КПП: 770 801 001
+```
+
+**Output:**
+
+```text
+КПП: [KPP_1]
+```
+
+**Actual replacements:**
+
+- KPP: `770 801 001` → `[KPP_1]` (regex_kpp_context_spaced)
+
+## PASS — test_ogrn_spaced_positive_001
+
+Sprint 1.1: ОГРН с пробелами должен скрываться как OGRN рядом с явной меткой.
+
+**Input:**
+
+```text
+ОГРН: 102 770 013 2195
+```
+
+**Output:**
+
+```text
+ОГРН: [OGRN_1]
+```
+
+**Actual replacements:**
+
+- OGRN: `102 770 013 2195` → `[OGRN_1]` (regex_ogrn_context_spaced)
+
+## PASS — test_private_org_quoted_positive_001
+
+Sprint 1.1: частная организация с префиксом и названием в кавычках должна скрывать название.
+
+**Input:**
+
+```text
+Договор заключён с ООО «Ромашка-Сервис» на выполнение работ.
+```
+
+**Output:**
+
+```text
+Договор заключён с ООО [ORG_PRIVATE_1] на выполнение работ.
+```
+
+**Actual replacements:**
+
+- ORG_PRIVATE: `«Ромашка-Сервис»` → `[ORG_PRIVATE_1]` (natasha_org_private)
+
+## PASS — test_registration_date_one_digit_day_positive_001
+
+Sprint 1.1: дата регистрации с однозначным днём должна скрываться как DATE_REGISTRATION.
+
+**Input:**
+
+```text
+Дата регистрации по месту жительства: 5.03.2020.
+```
+
+**Output:**
+
+```text
+Дата регистрации по месту жительства: [DATE_REGISTRATION_1].
+```
+
+**Actual replacements:**
+
+- DATE_REGISTRATION: `5.03.2020` → `[DATE_REGISTRATION_1]` (regex_date_registration)
+
+## PASS — test_address_index_after_address_label_positive_001
+
+Sprint 1.1: индекс и адресный хвост после метки адреса должны скрываться, город сохраняется.
+
+**Input:**
+
+```text
+Адрес регистрации: 190000, г. Санкт-Петербург, Невский проспект, д. 10, кв. 5.
+```
+
+**Output:**
+
+```text
+Адрес регистрации: [POST_INDEX_1], г. Санкт-Петербург, [ADDRESS_DETAIL_1].
+```
+
+**Actual replacements:**
+
+- POST_INDEX: `190000` → `[POST_INDEX_1]` (regex_post_index_address_context)
+- ADDRESS_DETAIL: `Невский проспект, д. 10, кв. 5` → `[ADDRESS_DETAIL_1]` (regex_reverse_street_tail)
+
+## PASS — test_mobile_phone_context_positive_001
+
+Sprint 1.1: мобильный телефон без +7/8 рядом с явной меткой должен скрываться как PHONE.
+
+**Input:**
+
+```text
+Мобильный: 921 123-45-67.
+```
+
+**Output:**
+
+```text
+Мобильный: [PHONE_1].
+```
+
+**Actual replacements:**
+
+- PHONE: `921 123-45-67` → `[PHONE_1]` (regex_phone_context)
+
+## PASS — test_en_full_name_context_positive_001
+
+Sprint 1.2: English Full name label should mask a Latin person name as PERSON.
+
+**Input:**
+
+```text
+Full name: John Smith.
+```
+
+**Output:**
+
+```text
+Full name: [PERSON_1].
+```
+
+**Actual replacements:**
+
+- PERSON: `John Smith` → `[PERSON_1]` (regex_english_labeled_person)
+
+## PASS — test_en_passport_no_positive_001
+
+Sprint 1.2: English passport label should mask Russian passport-style number as PASSPORT.
+
+**Input:**
+
+```text
+Passport No.: 1234 567890 issued by authority.
+```
+
+**Output:**
+
+```text
+Passport No.: [PASSPORT_1] issued by authority.
+```
+
+**Actual replacements:**
+
+- PASSPORT: `1234 567890` → `[PASSPORT_1]` (regex_passport)
+
+## PASS — test_en_tax_id_positive_001
+
+Sprint 1.2: English Tax ID / TIN label should mask a 12-digit INN as INN.
+
+**Input:**
+
+```text
+Tax ID: 473254765214.
+```
+
+**Output:**
+
+```text
+Tax ID: [INN_1].
+```
+
+**Actual replacements:**
+
+- INN: `473254765214` → `[INN_1]` (regex_inn_en_context)
+
+## PASS — test_en_tax_id_spaced_positive_001
+
+Sprint 1.2: English Tax ID label should mask a spaced 12-digit INN as INN.
+
+**Input:**
+
+```text
+Tax ID: 473 254 765 214.
+```
+
+**Output:**
+
+```text
+Tax ID: [INN_1].
+```
+
+**Actual replacements:**
+
+- INN: `473 254 765 214` → `[INN_1]` (regex_inn_en_context_spaced)
+
+## PASS — test_en_dob_positive_001
+
+Sprint 1.2: English date of birth label should mask DD.MM.YYYY as DATE_BIRTH.
+
+**Input:**
+
+```text
+Date of birth: 01.02.1980.
+```
+
+**Output:**
+
+```text
+Date of birth: [DATE_BIRTH_1].
+```
+
+**Actual replacements:**
+
+- DATE_BIRTH: `01.02.1980` → `[DATE_BIRTH_1]` (regex_date_birth_en)
+
+## PASS — test_en_phone_context_positive_001
+
+Sprint 1.2: English phone/mobile label should mask a local mobile-like number as PHONE.
+
+**Input:**
+
+```text
+Phone: 921 123-45-67.
+```
+
+**Output:**
+
+```text
+Phone: [PHONE_1].
+```
+
+**Actual replacements:**
+
+- PHONE: `921 123-45-67` → `[PHONE_1]` (regex_phone_context)
+
+## PASS — test_en_address_detail_positive_001
+
+Sprint 1.2: English address label should mask postal index and street/building/apartment tail while keeping city context.
+
+**Input:**
+
+```text
+Registered address: 190000, Saint Petersburg, Nevsky Prospect, building 10, apartment 5.
+```
+
+**Output:**
+
+```text
+Registered address: [POST_INDEX_1], Saint Petersburg, [ADDRESS_DETAIL_1].
+```
+
+**Actual replacements:**
+
+- POST_INDEX: `190000` → `[POST_INDEX_1]` (regex_post_index_en_address_context)
+- ADDRESS_DETAIL: `Nevsky Prospect, building 10, apartment 5` → `[ADDRESS_DETAIL_1]` (regex_reverse_address_tail_en)
+
+## PASS — test_en_private_org_llc_positive_001
+
+Sprint 1.2: English private organization prefix LLC should preserve legal form and mask organization name.
+
+**Input:**
+
+```text
+Contract signed with LLC Romashka Service.
+```
+
+**Output:**
+
+```text
+Contract signed with LLC [ORG_PRIVATE_1]
+```
+
+**Actual replacements:**
+
+- ORG_PRIVATE: `Romashka Service.` → `[ORG_PRIVATE_1]` (regex_private_org_prefix)

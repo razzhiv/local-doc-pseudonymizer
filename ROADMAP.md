@@ -1,68 +1,116 @@
 # Roadmap
 
-## v0.1.1-alpha public baseline alignment
+BeforeSending is an experimental local-first document pseudonymization / reversible masking / risk-reduction MVP.
 
-Status: current cleanup branch after Sprint 0.6.
+It is focused on preparing DOCX and text-layer PDF documents before external AI/SaaS use, contractor sharing or other third-party processing.
 
-Goals:
+## Current checkpoint — v0.2-alpha candidate
 
-- keep the public repository GitHub-safe;
-- make GitHub Actions run the actual strict synthetic regression command;
-- align public documentation with the Sprint 0.6 regression baseline;
-- keep the regression baseline green;
-- avoid new core behavior changes in this cleanup sprint.
+Status: release/docs hygiene checkpoint after Sprint 1.2.
 
-Non-goals:
-
-- no OCR;
-- no GUI;
-- no encrypted vault;
-- no compliance claims;
-- no real-data corpus;
-- no new detection rules.
-
-## Current status
-
-BeforeSending is an experimental local-first MVP focused on DOCX and text-layer PDF documents.
-
-Current regression baseline:
+Current verified baseline:
 
 ```text
-PASS 34 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 34
-Blocking errors: 0
+PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
+Document-level pytest: 5 passed
 ```
 
-Current public synthetic XFAIL cases: none.
+What is now aligned:
 
-Closed in Sprint 0.6:
+- README positioning and warnings.
+- CHANGELOG / STATUS / ROADMAP.
+- `docs/limitations.md`.
+- `docs/supported_entities.md`.
+- `.gitignore` sensitive-file hygiene.
+- token dictionary security notes.
+- safe issue-reporting templates.
+- latest synthetic regression report.
 
-- INN with spaces;
-- INN with OCR-letter substitution.
-
-## v0.1-alpha
+## v0.1-alpha — released MVP baseline
 
 Focus:
 
 - local DOCX / text-layer PDF processing;
 - reversible token dictionary;
-- synthetic regression corpus;
+- replacement reports;
 - human-in-the-loop review workflow;
+- synthetic regression corpus;
 - safe GitHub documentation;
-- no real data in public repository.
+- no real data in the public repository.
 
-## Sprint 0.6 completed
+## Completed controlled sprints
 
-INN normalization and OCR-suspect handling:
+### Sprint 0.8 — PDF safe handling
 
-- spaced/hyphenated INN values near an explicit `ИНН` label are masked as `INN`;
-- OCR-like INN values near an explicit `ИНН` label are masked as `OCR_SUSPECT_INN`;
-- service-number contexts remain protected by negative regression tests.
+PDFs without an extractable text layer no longer silently produce an empty anonymized DOCX.
 
-## Later
+### Sprint 0.9 — DOCX table-aware context
+
+DOCX table cells are processed with row/column label context.
+
+### Sprint 1.0 — document-level regression tests
+
+Added generated DOCX/PDF pytest coverage for document workflows.
+
+### Sprint 1.1 — Russian recognition quality pack v1
+
+Expanded the synthetic baseline from 34 to 44 cases.
+
+### Sprint 1.2 — minimal English profile
+
+Added a minimal label-driven English profile and expanded the synthetic baseline from 44 to 52 cases.
+
+## v0.2-alpha candidate goals
+
+A `v0.2-alpha` tag should be considered only after:
+
+- a clean final verification pass;
+- a GitHub Actions run on the target public repository;
+- review that the public tree contains no real documents, dictionaries, reports, archives or generated private working files;
+- confirmation that dependency licenses have been reviewed for the versions actually used;
+- a release note that clearly says experimental MVP / not compliance / not DLP / manual review required.
+
+## Next technical tracks
+
+Choose one track at a time.
+
+### Track A — Russian recognition quality pack v2
+
+Possible focus:
+
+- more address variants;
+- more passport phrasing;
+- table labels with abbreviations;
+- mixed реквизиты blocks;
+- legal entity details;
+- court/procedural number false positives and false negatives;
+- additional negative tests to prevent over-masking.
+
+### Track B — PDF table extraction experiment
+
+Possible focus:
+
+- `pdfplumber.extract_tables()`;
+- simple text-layer PDF tables only;
+- conversion of simple tables into DOCX tables;
+- duplicate-extraction guards;
+- explicit limitations;
+- no OCR.
+
+### Track C — product/release packaging
+
+Possible focus:
+
+- clean `v0.2-alpha` release note;
+- public example walkthrough using synthetic data only;
+- installer/CLI polish;
+- screenshots generated only from synthetic examples;
+- dependency pinning / license review.
+
+## Later / out of current scope
 
 Possible future work:
 
-- DOCX/PDF end-to-end synthetic tests;
 - desktop GUI;
 - encrypted local vault;
 - visual review;
@@ -72,3 +120,12 @@ Possible future work:
 - Obsidian / local knowledge workflow integrations;
 - team workflow and audit trail;
 - B2B / on-prem deployment.
+
+## Non-goals for the current MVP
+
+- no compliance guarantee;
+- no enterprise DLP claim;
+- no guaranteed anonymization claim;
+- no real-data corpus;
+- no OCR in v0.1/v0.2 candidate;
+- no broad masking rules without synthetic regression tests.

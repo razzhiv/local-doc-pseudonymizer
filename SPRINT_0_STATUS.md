@@ -1,8 +1,8 @@
 # SPRINT 0 STATUS
 
-## Sprint 0.8-1.1 checkpoint - 2026-05-30
+## Sprint 0.8-1.2 checkpoint - 2026-05-31
 
-Status: completed and merged into `main`.
+Status: completed and merged into `main`; docs/release hygiene aligned in current working checkpoint.
 
 Closed sprints:
 
@@ -18,20 +18,24 @@ Closed sprints:
   - Added end-to-end pytest coverage for DOCX and PDF workflows.
   - Added tests for DOCX paragraph masking, DOCX table masking, text-layer PDFs, image-only PDFs, and partial PDF processing.
 
-- Sprint 1.1 - recognition quality pack
+- Sprint 1.1 - recognition quality pack v1
   - Added 10 new synthetic recognition cases.
-  - Current synthetic regression baseline increased from 34 to 44 passing cases.
+  - Synthetic regression baseline increased from 34 to 44 passing cases.
+
+- Sprint 1.2 - minimal English profile
+  - Added minimal label-driven English support for common personal-data fields.
+  - Synthetic regression baseline increased from 44 to 52 passing cases.
 
 Current verified baseline:
 
-- Synthetic regression: PASS 44 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 44
+- Synthetic regression: PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
 - Document-level regression: 5 passed
 
 Current next candidates:
 
-- Sprint 1.2 - minimal English profile
-- Additional Russian recognition quality packs based on future synthetic false-negative reports
+- Russian recognition quality pack v2
 - PDF table extraction as a later experimental track
+- v0.2-alpha release note / tag preparation after final public-tree hygiene check
 - OCR remains out of scope until the text-layer PDF/DOCX pipeline is stable
 
 
