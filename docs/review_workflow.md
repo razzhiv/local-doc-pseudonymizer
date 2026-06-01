@@ -30,9 +30,9 @@ The tool should highlight:
 - false positive candidates;
 - false negative candidates;
 - OCR-suspect cases;
-- summary counts and category/token counts in the local HTML review report.
+- summary counts and category/token counts in the local Russian-first HTML review report.
 
-The local HTML review report is generated under `output/reports/review_report_*.html` and `output/reports/review_report_latest.html`. It is self-contained and intended for local browser review only. When generated from real documents, it is sensitive because it can include original values, tokens, review context, warnings, and cleanup paths.
+The local HTML review report is generated under `output/reports/review_report_*.html` and `output/reports/review_report_latest.html`. It is Russian-first, self-contained, and intended for local browser review only. It keeps stable technical category codes beside Russian display labels. When generated from real documents, it is sensitive because it can include original values, tokens, review context, warnings, cleanup paths, and technical review notes.
 
 ## Regression tests
 

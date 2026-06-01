@@ -8,6 +8,84 @@ from pathlib import Path
 from typing import Any
 
 
+CATEGORY_LABELS = {
+    "ACCOUNT": "Банковский счёт",
+    "ADDRESS_DETAIL": "Адрес / часть адреса",
+    "BIK": "БИК",
+    "CADASTRAL": "Кадастровый номер",
+    "CARD": "Банковская карта",
+    "COORDS": "Координаты",
+    "COURT_CASE": "Судебное дело",
+    "COURT_MATERIAL": "Судебный материал",
+    "COURT_UID": "Судебный идентификатор",
+    "DATE_BIRTH": "Дата рождения",
+    "DATE_DOC_ISSUE": "Дата выдачи документа",
+    "DATE_REGISTRATION": "Дата регистрации",
+    "DIVISION_CODE": "Код подразделения",
+    "EMAIL": "Email / электронная почта",
+    "INN": "ИНН",
+    "KPP": "КПП",
+    "MEDICAL_DATE": "Медицинская дата",
+    "MESSENGER_LINK": "Ссылка на мессенджер",
+    "OCR_SUSPECT_INN": "Подозрение на ИНН с OCR-ошибкой",
+    "OGRN": "ОГРН",
+    "OGRNIP": "ОГРНИП",
+    "ORG": "Организация",
+    "ORG_PRIVATE": "Частная организация",
+    "PASSPORT": "Паспорт",
+    "PERSON": "ФИО / персона",
+    "PHONE": "Телефон",
+    "POST_INDEX": "Почтовый индекс",
+    "SNILS": "СНИЛС",
+    "TEXT": "Текст",
+    "TRACK": "Трек-номер",
+    "USERNAME": "Имя пользователя",
+}
+
+FILE_STATUS_LABELS = {
+    "processed": "Обработан",
+    "processed_text_layer": "Обработан текстовый слой",
+    "partially_processed_text_layer": "Частично обработан текстовый слой",
+    "not_processed_no_text_layer": "Не обработан: нет текстового слоя",
+    "processing_error": "Ошибка обработки",
+    "pending": "Ожидает обработки",
+}
+
+FINDING_STATUS_LABELS = {
+    "VALID_ENTITY": "Автоматически замаскировано",
+    "SUSPECT_ENTITY": "Замаскировано, нужна проверка",
+    "NEEDS_REVIEW": "Нужна ручная проверка",
+    "MANUAL_CONFIRMED": "Подтверждено ручным правилом",
+}
+
+POLICY_ACTION_LABELS = {
+    "ALLOW": "Оставить без замены",
+    "MASK_AND_REVIEW": "Замаскировать и проверить",
+    "MASK_CONFIDENTLY": "Замаскировать",
+    "REVIEW_ONLY": "Только проверить",
+}
+
+RECOMMENDED_DECISION_LABELS = {
+    "accept": "Принять",
+    "add_to_manual_allow": "Добавить в разрешения",
+    "add_to_manual_hide": "Добавить в ручное скрытие",
+    "create_candidate_rule": "Создать кандидатное правило",
+    "expand_valid_inn_to_13_digits": "Проверить идею расширения правила ИНН",
+    "hide_as_suspect": "Оставить скрытым как подозрительное",
+    "hide_once": "Скрыть один раз",
+    "leave_unmasked": "Оставить без маскирования",
+    "reject_case": "Отклонить кейс",
+}
+
+SKIP_REASON_LABELS = {
+    "inside_long_digit_sequence": "Внутри длинной цифровой последовательности",
+    "manual_allow_org_context": "Контекст организации есть в разрешениях",
+    "manual_allow_text": "Текст найден в ручных разрешениях",
+    "non_card_document_number_context": "Похоже на номер документа, не карту",
+    "service_number_context": "Служебный номер по контексту",
+}
+
+
 def _text(value: Any, default: str = "") -> str:
     if value is None:
         return default
@@ -97,6 +175,18 @@ def _replacement_token_counts(replacements: list[dict[str, Any]]) -> tuple[Count
     return counts, tokens_by_type
 
 
+def _label_with_code(value: Any, labels: dict[str, str]) -> str:
+    code = _text(value)
+    if not code:
+        return ""
+    label = labels.get(code)
+    return f"{label} ({code})" if label else code
+
+
+def _category_label(value: Any) -> str:
+    return _label_with_code(value, CATEGORY_LABELS)
+
+
 def _section_title(title: str, subtitle: str = "") -> str:
     subtitle_html = f"<p class=\"section-subtitle\">{_html(subtitle)}</p>" if subtitle else ""
     return f"<section><h2>{_html(title)}</h2>{subtitle_html}"
@@ -159,7 +249,7 @@ def build_html_review_report(
     for entity_type in all_categories:
         category_rows.append(
             [
-                entity_type,
+                _category_label(entity_type),
                 summary_counts.get(entity_type, 0),
                 len(replacement_tokens_by_type.get(entity_type, set())),
                 dictionary_counts.get(entity_type, 0),
@@ -173,7 +263,7 @@ def build_html_review_report(
         file_rows.append(
             [
                 filename,
-                status,
+                _label_with_code(status, FILE_STATUS_LABELS),
                 summary_total,
                 len(data.get("replacements", []) or []),
                 len(data.get("review_cases", []) or []),
@@ -188,11 +278,11 @@ def build_html_review_report(
             [
                 row.get("file") or row.get("file_name", ""),
                 row.get("block", ""),
-                row.get("type", ""),
+                _category_label(row.get("type", "")),
                 row.get("token", ""),
                 row.get("method", ""),
-                row.get("status", ""),
-                row.get("policy_action", ""),
+                _label_with_code(row.get("status", ""), FINDING_STATUS_LABELS),
+                _label_with_code(row.get("policy_action", ""), POLICY_ACTION_LABELS),
                 row.get("review_reason", ""),
                 row.get("original", ""),
                 row.get("comment", ""),
@@ -206,12 +296,12 @@ def build_html_review_report(
                 row.get("case_id", ""),
                 row.get("file_name") or row.get("file", ""),
                 row.get("block", ""),
-                row.get("status", ""),
-                row.get("entity_type_expected") or row.get("entity_type_detected", ""),
-                row.get("policy_action", ""),
+                _label_with_code(row.get("status", ""), FINDING_STATUS_LABELS),
+                _category_label(row.get("entity_type_expected") or row.get("entity_type_detected", "")),
+                _label_with_code(row.get("policy_action", ""), POLICY_ACTION_LABELS),
                 row.get("review_reason", ""),
                 row.get("safe_context", ""),
-                row.get("recommended_decision", ""),
+                _label_with_code(row.get("recommended_decision", ""), RECOMMENDED_DECISION_LABELS),
             ]
         )
 
@@ -221,9 +311,9 @@ def build_html_review_report(
             [
                 row.get("file") or row.get("file_name", ""),
                 row.get("block", ""),
-                row.get("type", ""),
+                _category_label(row.get("type", "")),
                 row.get("method", ""),
-                row.get("reason", ""),
+                _label_with_code(row.get("reason", ""), SKIP_REASON_LABELS),
                 row.get("original", ""),
                 row.get("context", ""),
             ]
@@ -235,13 +325,13 @@ def build_html_review_report(
             warning_rows.append([filename, warning])
 
     checklist = [
-        "Confirm the source fixture or document set is intended for this review run.",
-        "Open each pseudonymized output and verify direct identifiers were replaced with tokens.",
-        "Inspect replacement rows for over-masking and missed context.",
-        "Review any suspect or needs-review cases before sharing output externally.",
-        "Check images, scans, headers, footers, tables, and unusual formatting manually.",
-        "Keep the matching token dictionary local if restoration is still needed.",
-        "Delete generated local artifacts when review and restoration are complete.",
+        "Убедиться, что в запуск попал нужный набор документов и среди них нет лишних файлов.",
+        "Открыть каждый подготовленный файл и проверить, что прямые идентификаторы заменены токенами.",
+        "Проверить таблицу замен на пропуски, неверные срабатывания и чрезмерное маскирование.",
+        "Разобрать все строки со статусом suspect / needs review до передачи документа третьим лицам.",
+        "Отдельно просмотреть изображения, сканы, колонтитулы, таблицы и нестандартное форматирование.",
+        "Хранить подходящий словарь токенов локально только пока требуется обратное восстановление.",
+        "Удалить локальные артефакты после завершения проверки и восстановления.",
     ]
 
     cleanup_paths = [
@@ -412,93 +502,93 @@ def build_html_review_report(
 
     html_parts = [
         "<!doctype html>",
-        "<html lang=\"en\">",
+        "<html lang=\"ru\">",
         "<head>",
         "<meta charset=\"utf-8\">",
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
-        "<title>BeforeSending HTML Review Report</title>",
+        "<title>BeforeSending — отчёт проверки документа</title>",
         f"<style>{css}</style>",
         "</head>",
         "<body>",
         "<main>",
         "<header>",
-        "<h1>BeforeSending HTML Review Report</h1>",
-        f"<p class=\"meta\">Generated locally: {_html(generated_at)}</p>",
+        "<h1>BeforeSending — отчёт проверки документа</h1>",
+        f"<p class=\"meta\">Сформировано локально: {_html(generated_at)}</p>",
         "</header>",
         "<div class=\"warning\">",
-        "<strong>Sensitive local artifact</strong>",
-        "<p>Reports, token dictionaries, pseudonymized output, restored output, review files, and screenshots based on real documents can contain personal or confidential data. Keep them local. Do not upload, publish, commit, or share them unless they are verified synthetic and intended for release.</p>",
-        "<p>This report supports pseudonymization / masking / risk reduction. It is not guaranteed anonymization, legal compliance, or an enterprise DLP control.</p>",
+        "<strong>Важное предупреждение</strong>",
+        "<p>Этот отчёт является локальным рабочим артефактом проверки. Если документ содержит реальные персональные, банковские, договорные или иные чувствительные данные, сам отчёт тоже может быть чувствительным.</p>",
+        "<p>BeforeSending снижает риск раскрытия данных, но не гарантирует полную анонимизацию, юридическое соответствие 152-ФЗ/GDPR/HIPAA или отсутствие пропусков. Перед передачей документа третьим лицам результат необходимо проверить вручную.</p>",
         "</div>",
-        _section_title("Summary"),
+        _section_title("Краткая сводка"),
         "<div class=\"counts\">",
-        _count_card("Files", len(files), "Input documents in this report"),
-        _count_card("Replacements", len(replacements), "Detected values replaced by tokens"),
-        _count_card("Review cases", len(review_cases), "Suspect or needs-review rows"),
-        _count_card("Skipped", len(skipped), "Allowed or filtered findings"),
-        _count_card("Warnings", warning_count, "Processing caveats"),
+        _count_card("Файлы", len(files), "Документы в этом отчёте"),
+        _count_card("Замены", len(replacements), "Найденные значения, заменённые токенами"),
+        _count_card("Ручная проверка", len(review_cases), "Подозрительные или спорные строки"),
+        _count_card("Пропущено", len(skipped), "Разрешённые или отфильтрованные находки"),
+        _count_card("Предупреждения", warning_count, "Замечания обработки"),
         "</div>",
         "</section>",
-        _section_title("Files"),
+        _section_title("Файлы"),
         _table(
-            ["File", "Status", "Summary count", "Replacement rows", "Review cases", "Skipped", "Warnings"],
+            ["Файл", "Статус", "Всего находок", "Строк замен", "Ручная проверка", "Пропущено", "Предупреждения"],
             file_rows,
-            "No files were present in the report.",
+            "В отчёте нет файлов.",
         ),
         "</section>",
-        _section_title("Category And Token Counts", "Dictionary token counts are shown when a project dictionary is provided."),
+        _section_title("Категории найденных данных", "Счётчик токенов из словаря показывается, если словарь проекта передан в отчёт."),
         _table(
-            ["Category", "Summary count", "Unique replacement tokens", "Dictionary tokens"],
+            ["Категория", "Всего находок", "Уникальные токены замен", "Токены в словаре"],
             category_rows,
-            "No category counts were available.",
+            "Категории найденных данных отсутствуют.",
         ),
         "</section>",
-        _section_title("Findings And Replacements", "Original values may appear here. Treat this section as sensitive when real documents were processed."),
+        _section_title("Найденные замены", "В этом разделе могут быть исходные значения. Если обрабатывались реальные документы, считайте его чувствительным."),
         _table(
             [
-                "File",
-                "Block",
-                "Type",
-                "Token",
-                "Method",
-                "Status",
-                "Policy action",
-                "Review reason",
-                "Original value",
-                "Comment",
+                "Файл",
+                "Блок",
+                "Категория",
+                "Токен",
+                "Метод",
+                "Статус",
+                "Действие",
+                "Причина проверки",
+                "Исходное значение",
+                "Комментарий",
             ],
             replacement_rows,
-            "No replacement rows were available.",
+            "Строки замен отсутствуют.",
         ),
         "</section>",
-        _section_title("Manual Review Cases"),
+        _section_title("Что требует ручной проверки"),
         _table(
             [
-                "Case ID",
-                "File",
-                "Block",
-                "Status",
-                "Type",
-                "Policy action",
-                "Reason",
-                "Safe context",
-                "Recommended decision",
+                "ID кейса",
+                "Файл",
+                "Блок",
+                "Статус",
+                "Категория",
+                "Действие",
+                "Причина",
+                "Безопасный контекст",
+                "Рекомендация",
             ],
             review_rows,
-            "No suspect or needs-review cases were generated.",
+            "Подозрительных или спорных кейсов для ручной проверки нет.",
         ),
         "</section>",
-        _section_title("Skipped Findings"),
+        _section_title("Пропущенные / skipped findings"),
         _table(
-            ["File", "Block", "Type", "Method", "Reason", "Original value", "Context"],
+            ["Файл", "Блок", "Категория", "Метод", "Причина", "Исходное значение", "Контекст"],
             skipped_rows,
-            "No skipped findings were recorded.",
+            "Пропущенные находки не записаны.",
         ),
         "</section>",
-        _section_title("Warnings"),
-        _table(["File", "Warning"], warning_rows, "No processing warnings were recorded."),
+        _section_title("Предупреждения"),
+        _table(["Файл", "Предупреждение"], warning_rows, "Предупреждений обработки нет."),
         "</section>",
-        _section_title("Manual Review Checklist"),
+        _section_title("Чеклист перед отправкой"),
         "<div class=\"checklist\">",
         "\n".join(
             f"<label><input type=\"checkbox\">{_html(item)}</label>"
@@ -506,25 +596,38 @@ def build_html_review_report(
         ),
         "</div>",
         "</section>",
-        _section_title("Cleanup Guidance"),
+        _section_title("Безопасная очистка локальных артефактов"),
         "<div class=\"cleanup\">",
-        "<p>After review, remove generated local artifacts that are no longer needed. Keep the token dictionary only while restoration is required.</p>",
+        "<p>После проверки удалите локальные артефакты, которые больше не нужны. Словарь токенов храните только пока требуется обратное восстановление.</p>",
         "<ul>",
         "\n".join(f"<li><code>{_html(path)}</code></li>" for path in cleanup_paths),
         "</ul>",
         "</div>",
         "</section>",
-        _section_title("Limitations"),
+        _section_title("Ограничения"),
         "<div class=\"limitations\">",
         "<ul>",
-        "<li>Automated detection can miss sensitive values and can over-mask safe text.</li>",
-        "<li>Manual review remains required before sharing any prepared document with a third party or external AI/SaaS tool.</li>",
-        "<li>OCR, scanned image review, GUI review, vault/encryption, installer packaging, and compliance guarantees are outside this report.</li>",
-        "<li>Pseudonymized output plus its token dictionary can be reversible and must be handled as sensitive local data.</li>",
+        "<li>Автоматическое обнаружение может пропускать чувствительные значения и может маскировать безопасный текст.</li>",
+        "<li>Ручная проверка обязательна перед передачей подготовленного документа третьим лицам или внешним AI/SaaS-сервисам.</li>",
+        "<li>OCR, проверка сканов и изображений, GUI, зашифрованное хранилище, установщик и гарантии юридического соответствия не входят в этот отчёт.</li>",
+        "<li>Псевдонимизированный документ вместе со словарём токенов может быть обратимо восстановлен, поэтому словарь нужно хранить как чувствительный локальный артефакт.</li>",
         "</ul>",
         "</div>",
         "</section>",
-        "<footer>Generated by BeforeSending local HTML review report.</footer>",
+        _section_title("Техническая информация"),
+        _table(
+            ["Параметр", "Значение"],
+            [
+                ["Генератор", "Локальный HTML-отчёт BeforeSending"],
+                ["Язык интерфейса", "Русский интерфейс, технические коды сохранены в скобках"],
+                ["Формат", "Самодостаточный HTML с inline CSS, без внешних CSS/JS/CDN"],
+                ["Пути отчётов", "output/reports/review_report_*.html; output/reports/review_report_latest.html"],
+                ["Логика обнаружения", "Используются готовые данные отчёта; правила распознавания здесь не изменяются"],
+            ],
+            "Техническая информация недоступна.",
+        ),
+        "</section>",
+        "<footer>Сформировано локальным HTML-отчётом BeforeSending.</footer>",
         "</main>",
         "</body>",
         "</html>",

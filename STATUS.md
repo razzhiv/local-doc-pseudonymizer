@@ -2,7 +2,7 @@
 
 Date: 2026-06-01
 Project: BeforeSending / local-doc-pseudonymizer
-Status: `v0.2-alpha candidate` with Sprint 1.6 synthetic quality metrics dashboard. Not a production security or compliance product.
+Status: `v0.2-alpha candidate` with Sprint 1.7 Russian-first HTML review report UX. Not a production security or compliance product.
 
 ## Current verified baseline
 
@@ -41,6 +41,7 @@ On Windows, use the repository virtual environment if available:
 - Sprint 1.4 - golden synthetic demo and release-ready walkthrough.
 - Sprint 1.5 - local self-contained HTML review report for human-in-the-loop review.
 - Sprint 1.6 - quality metrics dashboard for synthetic regression categories.
+- Sprint 1.7 - Russian-first HTML review report UX for local human review.
 - Release/docs hygiene checkpoint - README, STATUS, ROADMAP, limitations, supported entities, issue safety, token dictionary warnings and release checklist aligned.
 
 ## Current scope
@@ -50,7 +51,7 @@ Supported:
 - DOCX documents.
 - PDFs with an extractable text layer.
 - Local reversible token dictionary.
-- JSON, DOCX, Markdown, and self-contained HTML review reports.
+- JSON, DOCX, Markdown, and Russian-first self-contained HTML review reports.
 - Synthetic quality metrics JSON and Russian Markdown reports under ignored `output/reports/`.
 - Human review workflow.
 - Synthetic text-block regression tests.
@@ -75,7 +76,7 @@ Not supported:
 
 Do not store real personal data in this repository.
 
-HTML review reports generated from real documents are sensitive local artifacts because they can include original values, tokens, review context, warnings, and cleanup paths. Do not upload, publish, commit, or share generated reports unless they are verified synthetic and intended for release.
+HTML review reports generated from real documents are sensitive local artifacts because they can include original values, tokens, review context, warnings, cleanup paths, and technical review notes. Do not upload, publish, commit, or share generated reports unless they are verified synthetic and intended for release.
 
 Quality metrics reports are intended only for synthetic regression results. They provide engineering visibility by category, not a compliance score, anonymization guarantee, or proof that false negatives are impossible.
 

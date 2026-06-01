@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 2026-06-01 - Sprint 1.7 - Russian-first HTML review report / review UX localization
+
+### Changed
+
+- Localized the self-contained HTML review report so Russian-speaking reviewers see Russian-first section titles, summary cards, warnings, table headers, checklist, cleanup guidance, limitations, empty states, and technical notes.
+- Added Russian display labels for detected-data categories while preserving stable technical codes such as `PERSON`, `INN`, and `OCR_SUSPECT_INN` in the report.
+- Kept existing report paths and filenames under `output/reports/review_report_*.html` and `output/reports/review_report_latest.html`.
+- Updated README, review workflow, demo walkthrough, docs index, status notes, and HTML report tests for the localized review UX.
+
+### Safety notes
+
+- Display-only localization; recognizer rules and detection behavior were not changed.
+- The HTML report remains self-contained with inline CSS and no external CSS, JavaScript, CDN, or network resources.
+- The report remains a local human-review aid for pseudonymization / reversible masking / risk reduction, not a guarantee of anonymization, regulatory compliance, DLP coverage, or zero leakage.
+- No OCR, PDF table extraction, GUI, encrypted vault, packaging, installer, real documents, or real personal data were added.
+
 ## 2026-06-01 - Sprint 1.6 - Quality metrics dashboard / categories
 
 ### Added
