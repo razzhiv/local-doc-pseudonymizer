@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 2026-06-02 - Sprint 1.8 - Encrypted vault design spike
+
+### Added
+
+- Added `docs/vault_design.md` documenting the sensitive boundary for token dictionaries, raw extracted text, reports, runtime artifacts, public issue safety, and a possible future encrypted vault.
+- Expanded `docs/token_dictionary_security.md` with report/log boundaries, cleanup wording, future vault constraints, and public-claim limits.
+- Updated README, docs index, STATUS, and ROADMAP with short pointers to the Sprint 1.8 design.
+
+### Safety notes
+
+- Documentation-only design spike; no production encryption was implemented.
+- Recognizer rules, detection behavior, pseudonymization behavior, and restore behavior were not changed.
+- No crypto dependencies, GUI, OCR, PDF table extraction, packaging, installer, cloud storage, AI automation integration, real documents, generated reports, dictionaries, screenshots, ZIPs, or token maps were added.
+- The current MVP still uses plaintext token dictionaries and must not be described as cryptographically protected.
+
 ## 2026-06-01 - Sprint 1.7 - Russian-first HTML review report / review UX localization
 
 ### Changed

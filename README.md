@@ -117,6 +117,8 @@ Output:
 
 The mapping is stored locally in `project_dictionary.json`. This file is sensitive and must not be shared.
 
+Encrypted vault support is not implemented yet. Sprint 1.8 documents the future vault boundary in `docs/vault_design.md`; current token dictionaries remain plaintext sensitive local files.
+
 ## Quick start
 
 Install dependencies:
@@ -185,6 +187,8 @@ Do not commit, upload or share:
 - `feedback/cases.jsonl` generated from real documents;
 - `rules/manual_hide.txt`;
 - `rules/manual_allow.txt`.
+
+Do not share screenshots, ZIPs, logs or reports if they expose real values, token maps, raw extracted text or plaintext dictionary contents. Masked documents are risk-reduced, not safe.
 
 ## Known limitations
 
@@ -300,6 +304,7 @@ Key docs:
 - `docs/limitations.md` — known limitations.
 - `docs/supported_entities.md` — experimental entity coverage.
 - `docs/token_dictionary_security.md` — dictionary/vault safety notes.
+- `docs/vault_design.md` - Sprint 1.8 docs-only design for a future encrypted vault boundary.
 - `docs/safe_bug_reports.md` — how to report missed detections safely.
 - `docs/release_checklist.md` — public release hygiene checklist.
 

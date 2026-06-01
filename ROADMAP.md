@@ -4,9 +4,9 @@ BeforeSending is an experimental local-first document pseudonymization / reversi
 
 It is focused on preparing DOCX and text-layer PDF documents before external AI/SaaS use, contractor sharing or other third-party processing.
 
-## Current checkpoint — v0.2-alpha candidate
+## Current checkpoint - v0.2-alpha candidate / Sprint 1.8 vault design spike
 
-Status: release/docs hygiene checkpoint after Sprint 1.6.
+Status: Sprint 1.8 docs-only encrypted vault boundary design.
 
 Current verified baseline:
 
@@ -26,6 +26,7 @@ What is now aligned:
 - safe issue-reporting templates.
 - latest synthetic regression report.
 - synthetic quality metrics dashboard by category.
+- Sprint 1.8 vault boundary design for a future password-based encrypted token dictionary vault.
 
 ## v0.1-alpha — released MVP baseline
 
@@ -77,6 +78,16 @@ Added a self-contained local HTML review report for human-in-the-loop review.
 
 Added synthetic-only JSON and Russian Markdown quality metrics by explicit regression categories.
 
+### Sprint 1.7 - Russian-first HTML review report UX
+
+Localized the self-contained local HTML review report for Russian-first human review while preserving stable technical category codes.
+
+### Sprint 1.8 - encrypted vault boundary design spike
+
+Documented the sensitive boundary for plaintext token dictionaries, reports, raw extracted text, runtime artifacts, public issue safety, and a possible future password-based encrypted vault.
+
+This sprint is documentation only. It does not implement encryption or change recognizer behavior.
+
 ## v0.2-alpha candidate goals
 
 A `v0.2-alpha` tag should be considered only after:
@@ -114,15 +125,30 @@ Possible focus:
 - explicit limitations;
 - no OCR.
 
-### Track C — product/release packaging
+### Track C - product-release packaging / one-command Windows setup
 
 Possible focus:
 
 - clean `v0.2-alpha` release note;
 - public example walkthrough using synthetic data only;
+- one-command Windows setup;
 - installer/CLI polish;
 - screenshots generated only from synthetic examples;
 - dependency pinning / license review.
+
+### Track D - future encrypted vault implementation planning
+
+This is a later implementation-planning track after Sprint 1.8 design review, not the immediate next sprint unless separately chosen.
+
+Possible focus:
+
+- accept or revise `docs/vault_design.md`;
+- choose a standard crypto library and dependency policy;
+- design a narrow vault read/write interface;
+- plan synthetic-only vault tests;
+- design plaintext dictionary migration;
+- update cleanup guidance without promising secure deletion;
+- only then consider enabling encrypted vault mode.
 
 ## Later / out of current scope
 
