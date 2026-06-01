@@ -562,6 +562,7 @@ def find_manual_hide_entities(text, manual_rules):
 DEFAULT_SERVICE_NUMBER_CONTEXTS = [
     "акт №", "акт n", "акт no", "сертификат", "номер обращения",
     "обращение", "уид", "uid", "регистрационный номер", "номер дела",
+    "справка", "справка №",
 ]
 
 DEFAULT_NON_CARD_CONTEXTS = [
@@ -569,11 +570,10 @@ DEFAULT_NON_CARD_CONTEXTS = [
     "сертификат", "регистрационный номер"
 ]
 
-DEFAULT_PASSPORT_CONTEXTS = [
-    "паспорт", "паспорта", "паспортные", "паспортный", "серия", "серии",
-    "выдан", "выдана", "выдано", "код подразделения",
+DEFAULT_STRONG_PASSPORT_CONTEXTS = [
+    "паспорт", "паспорта", "паспортные", "паспортный",
+    "документ, удостоверяющий личность", "документ удостоверяющий личность",
     "passport", "passport no", "passport number", "passport details",
-    "issued", "issued on", "date of issue"
 ]
 
 DEFAULT_ACCOUNT_CONTEXTS = [
@@ -704,7 +704,7 @@ def filter_allowed_findings(text, findings, rules):
         # Ложные паспорта внутри служебных номеров актов/сертификатов/обращений/УИД.
         # Важно: если рядом есть явный паспортный контекст, паспортное срабатывание сохраняем.
         if entity_type == "PASSPORT":
-            if context_contains_any(context, service_contexts) and not context_contains_any(context, DEFAULT_PASSPORT_CONTEXTS):
+            if context_contains_any(context, service_contexts) and not context_contains_any(context, DEFAULT_STRONG_PASSPORT_CONTEXTS):
                 item = deepcopy(finding)
                 item["skip_reason"] = "service_number_context"
                 item["context"] = context
@@ -903,12 +903,12 @@ def find_regex_entities(text):
     # Строгие идентификаторы
     add_pattern_findings(findings, text, r"\b\d{2}\s?\d{2}\s?\d{6}\b", "PASSPORT", "regex_passport", comment="Паспорт РФ, серия/номер")
     add_pattern_findings(findings, text, r"\b\d{3}-\d{3}\b", "DIVISION_CODE", "regex_division_code", comment="Код подразделения")
-    add_pattern_findings(findings, text, r"\b(?:код\s+подразделения)\b[\s:№-]*(\d{3}[\s-]\d{3})\b", "DIVISION_CODE", "regex_division_code_context_spaced", flags=re.IGNORECASE, group=1, comment="Код подразделения с пробелом")
+    add_pattern_findings(findings, text, r"\b(?:код\s+(?:подразделения|подр\.?))[\s:№-]*(\d{3}[\s-]\d{3})\b", "DIVISION_CODE", "regex_division_code_context_spaced", flags=re.IGNORECASE, group=1, comment="Код подразделения с пробелом")
     add_pattern_findings(findings, text, r"\b\d{3}[\s-]\d{3}[\s-]\d{3}\s?\d{2}\b", "SNILS", "regex_snils", comment="СНИЛС")
     add_pattern_findings(
         findings,
         text,
-        r"\b(?:паспорт|паспорта|паспортные\s+данные)\b[^\n;]{0,60}?\bсер(?:ия|ии)\b[\s:№-]*((?:\d{2}\s?\d{2})[^\d\n;]{0,20}\d{6})\b",
+        r"\b(?:паспорт|паспорта|паспортные\s+данные|документ,?\s+удостоверяющий\s+личность)\b[^\n;]{0,80}?\bсер(?:ия|ии|\.?)\s*[:№-]*((?:\d{2}\s?\d{2})[^\d\n;]{0,20}\d{6})\b",
         "PASSPORT", "regex_passport_series_number_context", flags=re.IGNORECASE, group=1,
         comment="Паспорт РФ: серия и номер в раздельных полях"
     )
@@ -922,12 +922,16 @@ def find_regex_entities(text):
     )
 
     # ИНН/ОГРН/ОГРНИП/КПП — по контексту, чтобы не ломать номера договоров и актов
+    add_pattern_findings(findings, text, r"\bИНН\s*/\s*КПП\b[\s:№-]*(\d{10}|\d{12})\s*/\s*\d{9}\b", "INN", "regex_inn_kpp_pair_context", flags=re.IGNORECASE, group=1, comment="ИНН в паре ИНН/КПП")
+    add_pattern_findings(findings, text, r"\bИНН\s*/\s*КПП\b[\s:№-]*(?:\d{10}|\d{12})\s*/\s*(\d{9})\b", "KPP", "regex_inn_kpp_pair_context", flags=re.IGNORECASE, group=1, comment="КПП в паре ИНН/КПП")
     add_pattern_findings(findings, text, r"\bИНН\b[\s:№-]*(\d{10}|\d{12})\b", "INN", "regex_inn_context", flags=re.IGNORECASE, group=1, comment="ИНН")
     add_pattern_findings(findings, text, r"\b(?:INN|TIN|Tax\s+ID|Taxpayer\s+ID)\b[\s:№#-]*(\d{10}|\d{12})\b", "INN", "regex_inn_en_context", flags=re.IGNORECASE, group=1, comment="INN/TIN/Tax ID near English label")
     add_spaced_inn_findings(findings, text)
     add_contextual_spaced_digits_finding(findings, text, r"INN|TIN|Tax\s+ID|Taxpayer\s+ID", 10, "INN", "regex_inn_en_context_spaced", comment="INN/TIN/Tax ID with spaces near English label")
     add_contextual_spaced_digits_finding(findings, text, r"INN|TIN|Tax\s+ID|Taxpayer\s+ID", 12, "INN", "regex_inn_en_context_spaced", comment="INN/TIN/Tax ID with spaces near English label")
     add_ocr_suspect_inn_findings(findings, text)
+    add_pattern_findings(findings, text, r"\bОГРН\s*/\s*ОГРНИП\b[\s:№-]*(\d{13})\s*/\s*\d{15}\b", "OGRN", "regex_ogrn_ogrnip_pair_context", flags=re.IGNORECASE, group=1, comment="ОГРН в паре ОГРН/ОГРНИП")
+    add_pattern_findings(findings, text, r"\bОГРН\s*/\s*ОГРНИП\b[\s:№-]*\d{13}\s*/\s*(\d{15})\b", "OGRNIP", "regex_ogrn_ogrnip_pair_context", flags=re.IGNORECASE, group=1, comment="ОГРНИП в паре ОГРН/ОГРНИП")
     add_pattern_findings(findings, text, r"\bОГРН\b[\s:№-]*(\d{13})\b", "OGRN", "regex_ogrn_context", flags=re.IGNORECASE, group=1, comment="ОГРН")
     add_contextual_spaced_digits_finding(findings, text, "ОГРН", 13, "OGRN", "regex_ogrn_context_spaced", comment="ОГРН с пробелами/дефисами")
     add_pattern_findings(findings, text, r"\bОГРНИП\b[\s:№-]*(\d{15})\b", "OGRNIP", "regex_ogrnip_context", flags=re.IGNORECASE, group=1, comment="ОГРНИП")
@@ -969,7 +973,7 @@ def find_regex_entities(text):
     )
     add_pattern_findings(
         findings, text,
-        r"\b(?:телефон|тел\.?|контактный\s+телефон|моб\.?|мобильный(?:\s+телефон)?|phone|mobile|cell(?:\s+phone)?|contact\s+phone|tel\.?)\b[\s:№#-]*(\(?\d{3,5}\)?[\s\-]*\d[\d\s\-]{4,10}(?:\s*,?\s*(?:доб\.?|доб|доп\.?|ext\.?)\s*\d+)?)",
+        r"\b(?:телефон|тел\.?|контактный\s+телефон|моб\.?|мобильный(?:\s+телефон)?|phone|mobile|cell(?:\s+phone)?|contact\s+phone|tel\.?)(?=[\s:№#-])[\s:№#-]*(\(?\d{3,5}\)?[\s\-]*\d[\d\s\-]{4,10}(?:\s*,?\s*(?:доб\.?|доб|доп\.?|ext\.?)\s*\d+)?)",
         "PHONE", "regex_phone_context", flags=re.IGNORECASE, group=1, comment="Телефон по контексту / phone by context"
     )
 
@@ -1047,11 +1051,16 @@ def find_address_details(text):
     )
     add_pattern_findings(findings, text, glued_shosse_house, "ADDRESS_DETAIL", "regex_glued_shosse_house", flags=re.IGNORECASE, group=1, comment="Адресный хвост с плохим OCR: шд.11В")
 
-    # Если встречаются дом/квартира без улицы в явном адресном контексте.
+    # Если встречаются дом/квартира/помещение без улицы в явном адресном контексте.
+    detail_marker_token = rf"(?<![А-ЯЁа-яёA-Za-z])(?:{detail_markers})(?![А-ЯЁа-яёA-Za-z])"
     address_context_tail = (
-        rf"(?i)\b(?:адрес|место\s+жительства|место\s+регистрации|зарегистрирован(?:а)?\s+по\s+адресу)"
-        rf"[^\n;]{{0,100}}?((?:дом|д\.?)\s*[^,\n;\.]+(?:[,;]\s*(?:{detail_markers})\s*[^,\n;\.]*)*)"
+        rf"(?i)\b(?:адрес|адрес\s+рег\.?|место\s+жительства|место\s+регистрации|"
+        rf"место\s+нахождения\s+объекта|местонахождение\s+объекта|"
+        rf"зарегистрирован(?:а)?\s+по\s+адресу)"
+        rf"[^\n;]{{0,120}}?(({detail_marker_token})\s*[^,\n;\.]+"
+        rf"(?:[,;]\s*{detail_marker_token}\s*[^,\n;\.]*)*)"
     )
+    add_pattern_findings(findings, text, address_context_tail, "ADDRESS_DETAIL", "regex_address_context_tail", flags=re.IGNORECASE, group=1, comment="Адресные детали после явного адресного контекста")
     # Minimal English address profile: keep country/region/city context, hide street/building/apartment tail.
     english_street_markers = (
         r"street|st\.?|avenue|ave\.?|road|rd\.?|lane|ln\.?|prospect|"
@@ -1094,7 +1103,7 @@ def find_sensitive_dates(text):
 
     add_pattern_findings(
         findings, text,
-        r"(?i)(?:дата\s+рождения|родил(?:ся|ась)|рождения)\s*[:№-]?\s*" + date,
+        r"(?i)(?:дата\s+рождения|дата\s+рожд\.?|родил(?:ся|ась)|рождения)\s*[:№-]?\s*" + date,
         "DATE_BIRTH", "regex_date_birth", flags=re.IGNORECASE, group=1, comment="Дата рождения"
     )
     add_pattern_findings(
@@ -1269,7 +1278,11 @@ def find_natasha_entities(text):
             continue
 
         if span.type == "PER":
-            item = make_finding(text, span.start, span.stop, "PERSON", "natasha_per", "ФИО / персона")
+            start = span.start
+            ip_prefix = re.match(r"(?i)^ИП\s+", value)
+            if ip_prefix:
+                start += ip_prefix.end()
+            item = make_finding(text, start, span.stop, "PERSON", "natasha_per", "ФИО / персона")
             if item:
                 findings.append(item)
 

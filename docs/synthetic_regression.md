@@ -7,7 +7,7 @@ No real personal data should be included in public tests.
 ## Current baseline
 
 ```text
-PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
+PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
 Blocking errors: 0
 ```
 
@@ -47,6 +47,8 @@ Former XFAIL cases fixed in Sprint 0.6:
 Sprint 1.1 adds the first recognition quality pack for common synthetic false negatives: spaced SNILS, separated passport series/number, spaced BIK/KPP/OGRN, quoted private organizations, address index context, one-digit sensitive dates, and mobile phone context.
 
 Sprint 1.2 adds a minimal English profile for explicit English labels such as Full name, Passport No., Tax ID / TIN, Date of birth, Phone, Registered address, and LLC/Ltd-style private organization prefixes.
+
+Sprint 1.3 adds a second Russian recognition quality pack for synthetic legal/business cases: address details, passport phrasing, mixed requisites, table-like labels, private organizations/IP, and negative service-number guards.
 
 ## Adding tests
 
