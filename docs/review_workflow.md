@@ -41,13 +41,14 @@ Each meaningful rule should be backed by:
 - a positive test;
 - a negative test where possible;
 - a full strict regression run;
+- quality metrics generation for synthetic category visibility;
 - document-level coverage when the behavior depends on DOCX/PDF structure.
 
 ## Current baseline
 
 ```text
 PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
-Pytest smoke/document/report tests: 9 passed
+Pytest smoke/document/report/quality tests: 13 passed
 ```
 
 ## Safe data rule

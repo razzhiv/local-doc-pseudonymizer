@@ -7,16 +7,17 @@ Use this checklist before publishing or tagging a public release.
 Run:
 
 ```bash
-python -m py_compile pseudonymize.py
+python -m py_compile pseudonymize.py html_review_report.py quality_metrics.py run_regression_tests.py
 python run_regression_tests.py run-strict
-python -m pytest -q tests/test_document_level_regression.py
+python run_regression_tests.py quality-metrics
+python -m pytest -q
 ```
 
 Expected current baseline:
 
 ```text
-PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
-5 passed
+PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
+13 passed
 ```
 
 ## Sensitive-file check
@@ -29,6 +30,7 @@ Confirm that the public tree does not include:
 - `project_dictionary.json`;
 - `dictionary.json`;
 - real review reports;
+- generated quality metrics reports not verified as synthetic-only;
 - `feedback/cases.jsonl` generated from real documents;
 - screenshots containing personal or confidential data;
 - ZIP/RAR/7Z archives with working materials;
@@ -65,6 +67,7 @@ Use:
 - local-first;
 - human review;
 - synthetic regression tests.
+- synthetic quality metrics for engineering visibility only.
 
 Do not claim:
 
@@ -73,6 +76,7 @@ Do not claim:
 - legal compliance;
 - 152-FZ/GDPR/HIPAA compliance;
 - enterprise DLP;
+- compliance score;
 - OCR support for v0.1/v0.2 candidate.
 
 ## Release note check
@@ -85,4 +89,4 @@ A release note should say clearly:
 - OCR and scanned PDFs are not supported;
 - token dictionary is sensitive;
 - manual review is required;
-- synthetic baseline and document-level tests passed.
+- synthetic baseline, quality metrics generation, and pytest suite passed.

@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## 2026-06-01 - Sprint 1.6 - Quality metrics dashboard / categories
+
+### Added
+
+- Added `quality_metrics.py` to aggregate strict synthetic regression results into a machine-readable quality metrics JSON report and a Russian-first Markdown report.
+- Added explicit, extensible category metadata for synthetic regression visibility, including stable English category IDs and optional Russian display names.
+- Added `python run_regression_tests.py quality-metrics`, which runs strict synthetic regression and writes:
+  - `output/reports/quality_metrics_<timestamp>.json`
+  - `output/reports/quality_metrics_latest.json`
+  - `output/reports/quality_metrics_<timestamp>.md`
+  - `output/reports/quality_metrics_latest.md`
+- Added pytest coverage for category aggregation, failure summarization, UTF-8 Russian Markdown, latest-file writing, and category derivation.
+
+### Changed
+
+- Strict regression results now include lightweight synthetic case metadata needed by the quality dashboard.
+- Updated README, docs, and status notes for Sprint 1.6.
+
+### Safety notes
+
+- Synthetic regression data only.
+- The dashboard is engineering visibility, not a compliance score, anonymization guarantee, or proof that false negatives are impossible.
+- No OCR, GUI, vault/encryption, packaging, PDF table extraction, or recognizer-rule rewrite.
+- Generated runtime reports remain under ignored `output/reports/` and are not intended for commit.
+
 ## 2026-06-01 - Sprint 1.5 - Review UX v0.1 / HTML review report
 
 ### Added

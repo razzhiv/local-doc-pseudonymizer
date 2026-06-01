@@ -33,6 +33,27 @@ python -m pytest -q tests/test_document_level_regression.py
 
 The document-level suite generates synthetic files during the test run. It does not store real or fixture DOCX/PDF files in the repository.
 
+## Quality metrics dashboard
+
+Sprint 1.6 adds a synthetic-only quality metrics dashboard over strict regression results:
+
+```bash
+python run_regression_tests.py quality-metrics
+```
+
+This command runs the strict text-block regression suite and then writes ignored runtime reports:
+
+- `output/reports/quality_metrics_<timestamp>.json`
+- `output/reports/quality_metrics_latest.json`
+- `output/reports/quality_metrics_<timestamp>.md`
+- `output/reports/quality_metrics_latest.md`
+
+The JSON is machine-readable and keeps English field names plus stable English category IDs. Russian display names are included as optional values. The Markdown report is Russian-first and shows a category matrix with totals, passed cases, failures, positive/negative case counts, and success rate.
+
+Initial category IDs include `passport`, `inn`, `snils`, `ogrn`, `ogrnip`, `kpp`, `bank_details`, `phone`, `address`, `birth_or_sensitive_dates`, `general_dates_negative`, `persons`, `private_orgs`, `public_authorities_negative`, `contract_numbers_negative`, `case_numbers_negative`, `english_minimal`, `docx_tables_or_structure`, and `pdf_text_layer`.
+
+The dashboard is for engineering visibility only. It is not a compliance score, not a guarantee of anonymization, and not proof that false negatives are impossible. It must be generated only from synthetic tests and must not include real documents, real personal data, token dictionaries, or runtime artifacts from real data.
+
 ## XFAIL / known gaps
 
 Known gaps can be represented as `XFAIL` so that desired future behavior is tracked without blocking the current MVP.
@@ -58,6 +79,7 @@ Recommended structure for text-block detection rules:
 
 - add a synthetic input case;
 - define expected token behavior;
+- include `category_ids` when a new case does not fit the existing quality metrics category derivation;
 - include both positive and negative cases where possible;
 - run the regression tool before changing core detection logic.
 
