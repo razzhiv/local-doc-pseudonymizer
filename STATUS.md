@@ -2,13 +2,13 @@
 
 Date: 2026-06-01
 Project: BeforeSending / local-doc-pseudonymizer
-Status: `v0.2-alpha candidate` documentation and release-hygiene checkpoint. Not a production security or compliance product.
+Status: `v0.2-alpha candidate` golden synthetic demo checkpoint. Not a production security or compliance product.
 
 ## Current verified baseline
 
 ```text
 Synthetic regression: PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
-Document-level pytest: 5 passed
+Pytest smoke/document tests: 6 passed
 ```
 
 Validated with:
@@ -16,7 +16,7 @@ Validated with:
 ```bash
 python -m py_compile pseudonymize.py
 python run_regression_tests.py run-strict
-python -m pytest -q tests/test_document_level_regression.py
+python -m pytest -q
 ```
 
 On Windows, use the repository virtual environment if available:
@@ -24,7 +24,7 @@ On Windows, use the repository virtual environment if available:
 ```powershell
 .\.venv\Scripts\python.exe -m py_compile pseudonymize.py
 .\.venv\Scripts\python.exe run_regression_tests.py run-strict
-.\.venv\Scripts\python.exe -m pytest -q tests/test_document_level_regression.py
+.\.venv\Scripts\python.exe -m pytest -q
 ```
 
 ## Completed checkpoints
@@ -35,6 +35,7 @@ On Windows, use the repository virtual environment if available:
 - Sprint 1.1 — Russian recognition quality pack v1.
 - Sprint 1.2 — minimal label-driven English profile.
 - Sprint 1.3 — Russian recognition quality pack v2.
+- Sprint 1.4 — golden synthetic demo and release-ready walkthrough.
 - Release/docs hygiene checkpoint — README, STATUS, ROADMAP, limitations, supported entities, issue safety, token dictionary warnings and release checklist aligned.
 
 ## Current scope
@@ -48,6 +49,7 @@ Supported:
 - Human review workflow.
 - Synthetic text-block regression tests.
 - Generated document-level regression fixtures.
+- Golden synthetic end-to-end demo fixture and walkthrough.
 - Basic DOCX table row/column label context.
 - Minimal label-driven English profile for common personal-data fields.
 - Expanded label-driven Russian recognition coverage for legal/business synthetic cases.
@@ -78,5 +80,5 @@ For future false negatives or false positives:
 
 Choose one track at a time:
 
-1. PDF table extraction experiment for simple text-layer tables.
-2. v0.2-alpha release note / tag preparation after one more clean verification pass.
+1. v0.2-alpha release note / tag preparation after one more clean verification pass.
+2. PDF table extraction experiment for simple text-layer tables.

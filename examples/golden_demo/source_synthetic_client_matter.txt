@@ -1,0 +1,21 @@
+Golden synthetic client matter demo
+Synthetic scenario only. Do not replace this with real client data.
+
+Client full name: John Carter
+Date of birth: 04.05.1984.
+Passport No.: 1234 567890, issued on 06.07.2015.
+Tax ID: 473254765214.
+Registered address: 190000, Saint Petersburg, Example Street, building 10, apt. 5.
+Contact phone: +7 921 123-45-67.
+Email: john.carter@example.test.
+
+Business counterparty: LLC Northwind Analytics.
+Contract reference: DEMO-CONTRACT-2026-04 (leave unmasked).
+Settlement account: 40702810900000000001.
+Card for reimbursable expenses: 4111 1111 1111 1111.
+
+Review table:
+| Field | Value |
+| Email | legal.team@example.test |
+| Contact phone | +7 495 000-11-22 |
+| Public note | Synthetic matter prepared for a safe product demo |

@@ -1,0 +1,21 @@
+Golden synthetic client matter demo
+Synthetic scenario only. Do not replace this with real client data.
+Client full name: [PERSON_1]
+Date of birth: [DATE_BIRTH_1].
+Passport No.: [PASSPORT_1], issued on [DATE_DOC_ISSUE_1].
+Tax ID: [INN_1].
+Registered address: [POST_INDEX_1], Saint Petersburg, [ADDRESS_DETAIL_1].
+Contact phone: [PHONE_1].
+Email: [EMAIL_1].
+Business counterparty: LLC [ORG_PRIVATE_1]
+Contract reference: DEMO-CONTRACT-2026-04 (leave unmasked).
+Settlement account: [ACCOUNT_1].
+Card for reimbursable expenses: [CARD_1].
+Field
+Value
+Email
+[EMAIL_2]
+Contact phone
+[PHONE_2]
+Public note
+Synthetic matter prepared for a safe product demo

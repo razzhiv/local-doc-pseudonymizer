@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## 2026-06-01 — Sprint 1.4 — Golden synthetic demo + release-ready story
+
+### Added
+
+- Added `examples/golden_demo/` with a safe synthetic client/legal/business scenario.
+- Added a committed text fixture, a disposable DOCX generator, and a safe masked preview for the demo.
+- Added `docs/demo_walkthrough.md` covering the demo story, run commands, expected outputs, review checklist, restore flow, cleanup, and limitations.
+- Added a lightweight pytest smoke test that generates the demo DOCX in a temporary directory and verifies the expected tokenized story.
+
+### Changed
+
+- Updated `STATUS.md` and `docs/README.md` to point to the golden synthetic demo.
+
+### Safety notes
+
+- Synthetic data only.
+- No OCR, PDF table extraction, GUI, vault/encryption, recognizer rewrite, packaging, or compliance-positioning change.
+- No generated dictionary, runtime input/output/review/to_decode artifact, cache, virtual environment, or private file is intended for commit.
+
 ## 2026-05-01 — Sprint 0.2 / controlled improvement loop
 
 ### Added
