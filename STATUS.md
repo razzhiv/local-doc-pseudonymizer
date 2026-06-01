@@ -1,8 +1,8 @@
 # Status
 
-Date: 2026-06-01
+Date: 2026-06-02
 Project: BeforeSending / local-doc-pseudonymizer
-Status: `v0.2-alpha candidate` with Sprint 1.7 Russian-first HTML review report UX. Not a production security or compliance product.
+Status: `v0.2-alpha candidate` with Sprint 1.8 encrypted vault design spike documentation. Not a production security or compliance product.
 
 ## Current verified baseline
 
@@ -42,6 +42,7 @@ On Windows, use the repository virtual environment if available:
 - Sprint 1.5 - local self-contained HTML review report for human-in-the-loop review.
 - Sprint 1.6 - quality metrics dashboard for synthetic regression categories.
 - Sprint 1.7 - Russian-first HTML review report UX for local human review.
+- Sprint 1.8 - encrypted vault boundary design spike for future token dictionary protection.
 - Release/docs hygiene checkpoint - README, STATUS, ROADMAP, limitations, supported entities, issue safety, token dictionary warnings and release checklist aligned.
 
 ## Current scope
@@ -80,6 +81,8 @@ HTML review reports generated from real documents are sensitive local artifacts 
 
 Quality metrics reports are intended only for synthetic regression results. They provide engineering visibility by category, not a compliance score, anonymization guarantee, or proof that false negatives are impossible.
 
+Sprint 1.8 adds documentation for a future password-based encrypted vault boundary. It is design-only: the current MVP still writes plaintext token dictionaries, and there is no cryptographic protection, secure deletion, persistent vault session, daemon, or "remember password" feature.
+
 For future false negatives or false positives:
 
 1. Collect only the structure of the miss.
@@ -93,4 +96,6 @@ For future false negatives or false positives:
 Choose one track at a time:
 
 1. v0.2-alpha release note / tag preparation after one more clean verification pass.
-2. PDF table extraction experiment for simple text-layer tables.
+2. Packaging / one-command Windows setup as the next implementation-oriented track.
+3. Future encrypted vault implementation planning, only after design review, crypto library selection, and synthetic-only test design.
+4. PDF table extraction experiment for simple text-layer tables.
