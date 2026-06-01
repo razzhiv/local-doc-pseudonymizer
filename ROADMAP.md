@@ -6,13 +6,13 @@ It is focused on preparing DOCX and text-layer PDF documents before external AI/
 
 ## Current checkpoint — v0.2-alpha candidate
 
-Status: release/docs hygiene checkpoint after Sprint 1.2.
+Status: release/docs hygiene checkpoint after Sprint 1.6.
 
 Current verified baseline:
 
 ```text
-PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
-Document-level pytest: 5 passed
+PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
+Pytest: 13 passed
 ```
 
 What is now aligned:
@@ -25,6 +25,7 @@ What is now aligned:
 - token dictionary security notes.
 - safe issue-reporting templates.
 - latest synthetic regression report.
+- synthetic quality metrics dashboard by category.
 
 ## v0.1-alpha — released MVP baseline
 
@@ -60,6 +61,22 @@ Expanded the synthetic baseline from 34 to 44 cases.
 
 Added a minimal label-driven English profile and expanded the synthetic baseline from 44 to 52 cases.
 
+### Sprint 1.3 - Russian recognition quality pack v2
+
+Expanded label-driven Russian legal/business coverage and negative guards; baseline reached 70 cases.
+
+### Sprint 1.4 - golden synthetic demo
+
+Added a safe end-to-end demo fixture and walkthrough.
+
+### Sprint 1.5 - local HTML review report
+
+Added a self-contained local HTML review report for human-in-the-loop review.
+
+### Sprint 1.6 - quality metrics dashboard
+
+Added synthetic-only JSON and Russian Markdown quality metrics by explicit regression categories.
+
 ## v0.2-alpha candidate goals
 
 A `v0.2-alpha` tag should be considered only after:
@@ -74,7 +91,7 @@ A `v0.2-alpha` tag should be considered only after:
 
 Choose one track at a time.
 
-### Track A — Russian recognition quality pack v2
+### Track A - Russian recognition quality pack v3
 
 Possible focus:
 

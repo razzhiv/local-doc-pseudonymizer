@@ -19,16 +19,16 @@ Local-first document pseudonymization / reversible masking / risk reduction for 
 ## Release status
 
 Current public status: `v0.1-alpha` / experimental MVP.
-Current working checkpoint: `v0.2-alpha candidate` docs/release hygiene; see [STATUS.md](STATUS.md).
+Current working checkpoint: `v0.2-alpha candidate` with Sprint 1.6 quality metrics dashboard; see [STATUS.md](STATUS.md).
 
 Synthetic regression baseline:
 
 ```text
-PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
+PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
 Blocking errors: 0
 ```
 
-Document-level regression baseline: `5 passed`.
+Pytest baseline: `13 passed` across document-level, golden demo, HTML report, and quality metrics tests.
 
 This release is intended for early local testing and review-driven improvement. It is not production security software, a compliance solution, or a guarantee of complete anonymization.
 
@@ -46,6 +46,7 @@ It uses:
 - reversible token-based masking;
 - a local token dictionary;
 - replacement reports, including a self-contained local HTML review report;
+- quality metrics reports for synthetic regression categories;
 - human-in-the-loop review;
 - synthetic regression tests;
 - document-level regression tests;
@@ -180,6 +181,7 @@ Do not commit, upload or share:
 - real output documents;
 - review reports based on real data;
 - `output/reports/review_report_*.html` based on real data;
+- `output/reports/quality_metrics_*.json` or `output/reports/quality_metrics_*.md` unless generated from verified synthetic regression only;
 - `feedback/cases.jsonl` generated from real documents;
 - `rules/manual_hide.txt`;
 - `rules/manual_allow.txt`.
@@ -225,7 +227,7 @@ The public repository uses a synthetic regression corpus only.
 Current text-block baseline:
 
 ```text
-PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
+PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
 ```
 
 Run text-block regression tests:
@@ -247,6 +249,21 @@ python -m pytest -q tests/test_document_level_regression.py
 ```
 
 The document-level suite covers DOCX paragraphs, DOCX table context, text-layer PDFs, image-only PDF safe failure, and partially processed PDFs.
+
+Generate the Sprint 1.6 synthetic quality metrics dashboard:
+
+```bash
+python run_regression_tests.py quality-metrics
+```
+
+This runs the strict synthetic regression suite and writes ignored runtime reports under `output/reports/`:
+
+- `quality_metrics_<timestamp>.json`
+- `quality_metrics_latest.json`
+- `quality_metrics_<timestamp>.md`
+- `quality_metrics_latest.md`
+
+The JSON uses stable English field names and category IDs. The Markdown report is Russian-first. These metrics are engineering visibility over synthetic tests only; they are not a compliance score, proof of complete anonymization, or proof that false negatives are impossible.
 
 For safe future recognition improvements, see `docs/recognition_quality_backlog.md`.
 

@@ -9,6 +9,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
+from quality_metrics import get_case_category_ids, write_quality_metrics_reports
+
 ROOT = Path(__file__).resolve().parent
 ANONYMIZER_PATH = ROOT / "pseudonymize.py"
 EXPECTED_DIR = ROOT / "expected"
@@ -560,6 +562,18 @@ def run_one_test(anonymizer, case: Dict[str, Any], rules: Dict[str, Any]) -> Dic
     test_id = case.get("test_id", "unknown_test")
     raw_input = case.get("test_input") or case.get("input") or case.get("safe_context") or ""
     test_input = resolve_placeholders(str(raw_input))
+    result_metadata = {
+        "test_id": test_id,
+        "description": case.get("description", ""),
+        "source": case.get("source", ""),
+        "test_type": case.get("test_type", ""),
+        "filename": "synthetic_regression.txt",
+        "category_ids": get_case_category_ids(case),
+        "expected_replacement_types": list(case.get("expected_replacement_types", []) or []),
+        "expected_status": case.get("expected_status", ""),
+        "expected_policy_action": case.get("expected_policy_action", ""),
+        "gap_reason": case.get("gap_reason", ""),
+    }
     project_dictionary = anonymizer.empty_project_dictionary()
     file_report = {
         "summary": defaultdict(int),
@@ -578,7 +592,7 @@ def run_one_test(anonymizer, case: Dict[str, Any], rules: Dict[str, Any]) -> Dic
         )
     except Exception as e:
         return {
-            "test_id": test_id,
+            **result_metadata,
             "passed": False,
             "expected_fail": bool(case.get("expected_fail")),
             "outcome": "ERROR",
@@ -646,23 +660,19 @@ def run_one_test(anonymizer, case: Dict[str, Any], rules: Dict[str, Any]) -> Dic
         outcome = "FAIL"
 
     return {
-        "test_id": test_id,
-        "description": case.get("description", ""),
+        **result_metadata,
         "passed": passed,
         "expected_fail": expected_fail,
         "outcome": outcome,
-        "gap_reason": case.get("gap_reason", ""),
         "input": test_input,
         "output": output,
-        "expected_status": case.get("expected_status", ""),
-        "expected_policy_action": case.get("expected_policy_action", ""),
         "actual_replacements": file_report.get("replacements", []),
         "actual_skipped": file_report.get("skipped", []),
         "checks": checks,
     }
 
 
-def run_tests(include_known_gaps_as_failures: bool = False) -> None:
+def run_tests(include_known_gaps_as_failures: bool = False) -> Dict[str, Any] | None:
     ensure_dirs()
     cases = read_jsonl(REGRESSION_CASES_PATH)
     if not cases:
@@ -722,6 +732,7 @@ def run_tests(include_known_gaps_as_failures: bool = False) -> None:
     print(f"Блокирующих ошибок: {payload['blocking_failed']}")
     print(f"JSON результат: {LAST_RESULTS_PATH.relative_to(ROOT)}")
     print(f"MD отчёт: {report_path.relative_to(ROOT)}")
+    return payload
 
 
 def write_markdown_report(path: Path, payload: Dict[str, Any]) -> None:
@@ -813,6 +824,18 @@ def main() -> None:
         run_tests(include_known_gaps_as_failures=False)
     elif command == "run-strict":
         run_tests(include_known_gaps_as_failures=True)
+    elif command in ["quality-metrics", "quality_metrics"]:
+        payload = run_tests(include_known_gaps_as_failures=True)
+        if payload is not None:
+            paths = write_quality_metrics_reports(
+                payload,
+                REPORTS_DIR,
+                source_results_path=LAST_RESULTS_PATH.relative_to(ROOT),
+            )
+            print(f"Quality metrics JSON: {paths['json'].relative_to(ROOT)}")
+            print(f"Quality metrics latest JSON: {paths['json_latest'].relative_to(ROOT)}")
+            print(f"Quality metrics MD: {paths['markdown'].relative_to(ROOT)}")
+            print(f"Quality metrics latest MD: {paths['markdown_latest'].relative_to(ROOT)}")
     elif command == "status":
         show_status()
     else:
@@ -821,6 +844,7 @@ def main() -> None:
         print("  python run_regression_tests.py seed-extended")
         print("  python run_regression_tests.py run")
         print("  python run_regression_tests.py run-strict")
+        print("  python run_regression_tests.py quality-metrics")
         print("  python run_regression_tests.py status")
 
 
