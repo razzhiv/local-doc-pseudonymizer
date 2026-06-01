@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## 2026-06-01 - Sprint 1.5 - Review UX v0.1 / HTML review report
+
+### Added
+
+- Added a self-contained local HTML review report generated under `output/reports/review_report_*.html` and `output/reports/review_report_latest.html`.
+- Added summary counts, category/token counts, findings/replacements, manual review cases, skipped findings, warnings, checklist, cleanup guidance, and local-artifact safety notes.
+- Added pytest coverage for synthetic HTML generation, safety warning text, category/count output, offline-only HTML, and escaping of special values.
+
+### Changed
+
+- `pseudonymize.py` now writes the HTML review report alongside the existing JSON, DOCX, and Markdown reports.
+- Updated demo/docs/status notes for the HTML review report.
+
+### Safety notes
+
+- Synthetic fixtures only.
+- No OCR, PDF table extraction, GUI, vault/encryption, recognizer rewrite, packaging, installer, or compliance-positioning change.
+- No generated dictionary, runtime input/output/review/to_decode artifact, cache, virtual environment, or private file is intended for commit.
+
 ## 2026-06-01 — Sprint 1.4 — Golden synthetic demo + release-ready story
 
 ### Added

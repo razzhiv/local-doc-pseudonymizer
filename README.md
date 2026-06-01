@@ -45,7 +45,7 @@ It uses:
 - basic DOCX table context handling for row/column headers;
 - reversible token-based masking;
 - a local token dictionary;
-- replacement reports;
+- replacement reports, including a self-contained local HTML review report;
 - human-in-the-loop review;
 - synthetic regression tests;
 - document-level regression tests;
@@ -179,6 +179,7 @@ Do not commit, upload or share:
 - real input documents;
 - real output documents;
 - review reports based on real data;
+- `output/reports/review_report_*.html` based on real data;
 - `feedback/cases.jsonl` generated from real documents;
 - `rules/manual_hide.txt`;
 - `rules/manual_allow.txt`.

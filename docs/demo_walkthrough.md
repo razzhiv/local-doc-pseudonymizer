@@ -2,6 +2,8 @@
 
 This walkthrough is for Sprint 1.4: a safe, release-ready end-to-end story using synthetic data only.
 
+Sprint 1.5 adds a local HTML review report to the same demo flow so the human-in-the-loop review surface is visible in a browser without any external network dependency.
+
 The demo does not add a recognition engine, OCR, PDF table extraction, GUI, vault, encryption, or new compliance positioning. It shows the current local DOCX workflow on a small client/legal/business scenario.
 
 ## What the demo shows
@@ -60,6 +62,8 @@ output/project_dictionary.json
 output/anonymization_report.json
 output/anonymization_report.docx
 output/reports/report_*.md
+output/reports/review_report_*.html
+output/reports/review_report_latest.html
 ```
 
 The anonymized DOCX should contain tokens such as:
@@ -86,6 +90,7 @@ The exact report timestamp and token counts can vary if other files are present 
 - Check that direct identifiers are replaced with tokens.
 - Check that the synthetic contract reference remains readable.
 - Check `output/anonymization_report.json` or the markdown report for replacement types and review notes.
+- Open `output/reports/review_report_latest.html` locally and check the summary, category/token counts, findings table, manual review checklist, warnings, and cleanup guidance.
 - Treat `output/project_dictionary.json` as sensitive local data.
 - Do not share generated dictionaries, reports, input files, output files, screenshots, or review artifacts unless they are confirmed synthetic and intended for release.
 
@@ -125,6 +130,8 @@ output/project_dictionary.json
 output/anonymization_report.json
 output/anonymization_report.docx
 output/reports/report_<timestamp>.md
+output/reports/review_report_<timestamp>.html
+output/reports/review_report_latest.html
 to_decode/golden_synthetic_client_matter_anonymized.docx
 output/restored/golden_synthetic_client_matter_anonymized_restored.docx
 ```
