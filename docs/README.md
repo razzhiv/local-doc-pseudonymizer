@@ -10,6 +10,7 @@ Start here:
 - `token_dictionary_security.md` — why the token dictionary is sensitive.
 - `safe_bug_reports.md` — how to report issues without leaking real data.
 - `review_workflow.md` — controlled human-review and regression loop.
+- `demo_walkthrough.md` — golden synthetic end-to-end demo.
 - `synthetic_regression.md` — regression test workflow.
 - `synthetic_regression_report_latest.md` — latest generated synthetic regression report.
 - `release_checklist.md` — public-repo hygiene checklist.
