@@ -643,3 +643,33 @@ Document-level pytest: 5 passed
 - No real personal data was added.
 - No new core detection behavior was added in this docs/release hygiene checkpoint.
 - Future false negatives should continue to be rewritten into synthetic regression cases before rule changes.
+
+## 2026-06-01 — Sprint 1.3 — Russian recognition quality pack v2
+
+### Added
+
+- Added 18 synthetic regression cases for Russian legal/business recognition quality:
+  - address details and postal indexes;
+  - passport phrasing and division codes;
+  - mixed реквизиты blocks;
+  - table-like labels;
+  - private organizations/IP;
+  - court, contract and reference-number negative guards.
+- Added a seed-safe embedded extension in `run_regression_tests.py` so `seed-extended` recreates the full 70-case corpus.
+
+### Changed
+
+- Added narrow label/context-driven rules for address-detail tails, abbreviated passport/division labels, slash-pair requisites, abbreviated birth-date and phone labels, and IP person-name preservation.
+- Added a service-context guard for `Справка №` passport-like reference numbers.
+
+### Verified
+
+```text
+PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
+Document-level pytest: 5 passed
+```
+
+### Safety notes
+
+- Synthetic data only.
+- No PDF table extraction, OCR, GUI, encrypted vault, packaging, positioning or compliance behavior was changed.

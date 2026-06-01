@@ -1,13 +1,13 @@
 # Status
 
-Date: 2026-05-31
+Date: 2026-06-01
 Project: BeforeSending / local-doc-pseudonymizer
 Status: `v0.2-alpha candidate` documentation and release-hygiene checkpoint. Not a production security or compliance product.
 
 ## Current verified baseline
 
 ```text
-Synthetic regression: PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
+Synthetic regression: PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
 Document-level pytest: 5 passed
 ```
 
@@ -34,6 +34,7 @@ On Windows, use the repository virtual environment if available:
 - Sprint 1.0 — document-level regression tests.
 - Sprint 1.1 — Russian recognition quality pack v1.
 - Sprint 1.2 — minimal label-driven English profile.
+- Sprint 1.3 — Russian recognition quality pack v2.
 - Release/docs hygiene checkpoint — README, STATUS, ROADMAP, limitations, supported entities, issue safety, token dictionary warnings and release checklist aligned.
 
 ## Current scope
@@ -49,6 +50,7 @@ Supported:
 - Generated document-level regression fixtures.
 - Basic DOCX table row/column label context.
 - Minimal label-driven English profile for common personal-data fields.
+- Expanded label-driven Russian recognition coverage for legal/business synthetic cases.
 
 Not supported:
 
@@ -76,6 +78,5 @@ For future false negatives or false positives:
 
 Choose one track at a time:
 
-1. Russian recognition quality pack v2.
-2. PDF table extraction experiment for simple text-layer tables.
-3. v0.2-alpha release note / tag preparation after one more clean verification pass.
+1. PDF table extraction experiment for simple text-layer tables.
+2. v0.2-alpha release note / tag preparation after one more clean verification pass.
