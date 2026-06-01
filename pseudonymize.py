@@ -9,6 +9,8 @@ import pdfplumber
 import docx
 from natasha import Segmenter, NewsEmbedding, NewsNERTagger, Doc
 
+from html_review_report import build_html_review_report
+
 # ============================================================
 # Локальная обратимая псевдонимизация документов v3.5 / Sprint 0
 # Режим по умолчанию: SaaS-safe
@@ -1931,6 +1933,28 @@ def save_markdown_report(report):
     return report_path
 
 
+def save_html_report(report, project_dictionary):
+    os.makedirs(REPORTS_DIR, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    report_name = f"review_report_{timestamp}.html"
+    report_path = os.path.join(REPORTS_DIR, report_name)
+    latest_path = os.path.join(REPORTS_DIR, "review_report_latest.html")
+
+    generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    html = build_html_review_report(
+        normalize_report_for_json(report),
+        project_dictionary=project_dictionary,
+        generated_at=generated_at,
+    )
+
+    with open(report_path, "w", encoding="utf-8") as f:
+        f.write(html)
+    with open(latest_path, "w", encoding="utf-8") as f:
+        f.write(html)
+
+    return report_path
+
+
 def save_docx_report(report):
     report_doc = docx.Document()
     report_doc.add_heading("Отчёт анонимизации", level=1)
@@ -2085,6 +2109,7 @@ def main():
     save_json_report(full_report)
     save_docx_report(full_report)
     markdown_report_path = save_markdown_report(full_report)
+    html_report_path = save_html_report(full_report, project_dictionary)
 
     print("\nАнонимизация завершена.")
     print(f"Анонимизированные файлы: {ANON_DIR}")
@@ -2092,9 +2117,10 @@ def main():
     print(f"Отчёт DOCX: {REPORT_DOCX_PATH}")
     print(f"Отчёт JSON: {REPORT_JSON_PATH}")
     print(f"Краткий отчёт MD: {markdown_report_path}")
+    print(f"HTML review report: {html_report_path}")
     print(f"Ручной список скрытия: {MANUAL_HIDE_PATH}")
     print(f"Ручной список разрешений: {MANUAL_ALLOW_PATH}")
-    print("\nВАЖНО: project_dictionary.json, anonymization_report.*, output/reports/*.md и rules/*.txt не отправлять в SaaS.")
+    print("\nВАЖНО: project_dictionary.json, anonymization_report.*, output/reports/*.md, output/reports/*.html и rules/*.txt не отправлять в SaaS.")
 
 
 if __name__ == "__main__":

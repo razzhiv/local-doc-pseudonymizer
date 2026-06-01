@@ -10,13 +10,13 @@ Do not add new rules directly to the active core without synthetic tests.
 
 ```text
 case
-→ synthetic rewrite
-→ review
-→ human decision
-→ candidate rule
-→ regression test
-→ controlled promotion
-→ full verification
+-> synthetic rewrite
+-> review
+-> human decision
+-> candidate rule
+-> regression test
+-> controlled promotion
+-> full verification
 ```
 
 ## Human review
@@ -29,7 +29,10 @@ The tool should highlight:
 - skipped detections;
 - false positive candidates;
 - false negative candidates;
-- OCR-suspect cases.
+- OCR-suspect cases;
+- summary counts and category/token counts in the local HTML review report.
+
+The local HTML review report is generated under `output/reports/review_report_*.html` and `output/reports/review_report_latest.html`. It is self-contained and intended for local browser review only. When generated from real documents, it is sensitive because it can include original values, tokens, review context, warnings, and cleanup paths.
 
 ## Regression tests
 
@@ -43,8 +46,8 @@ Each meaningful rule should be backed by:
 ## Current baseline
 
 ```text
-PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
-Document-level pytest: 5 passed
+PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
+Pytest smoke/document/report tests: 9 passed
 ```
 
 ## Safe data rule
