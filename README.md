@@ -19,7 +19,7 @@ Local-first document pseudonymization / reversible masking / risk reduction for 
 ## Release status
 
 Current public status: `v0.1-alpha` / experimental MVP.
-Current working checkpoint: `v0.2-alpha candidate` with Sprint 1.6 quality metrics dashboard; see [STATUS.md](STATUS.md).
+Current working checkpoint: `v0.2-alpha candidate` with Sprint 1.7 Russian-first HTML review report UX; see [STATUS.md](STATUS.md).
 
 Synthetic regression baseline:
 
@@ -45,7 +45,7 @@ It uses:
 - basic DOCX table context handling for row/column headers;
 - reversible token-based masking;
 - a local token dictionary;
-- replacement reports, including a self-contained local HTML review report;
+- replacement reports, including a Russian-first self-contained local HTML review report;
 - quality metrics reports for synthetic regression categories;
 - human-in-the-loop review;
 - synthetic regression tests;
@@ -270,6 +270,8 @@ For safe future recognition improvements, see `docs/recognition_quality_backlog.
 ## Human review workflow
 
 The review workflow is designed to avoid chaotic rule changes.
+
+The local HTML review report is Russian-first and intended for local browser review only. It keeps technical category codes visible next to Russian labels so reviewers can cross-check report rows against JSON, DOCX, Markdown, and regression outputs.
 
 Rule improvement should follow:
 

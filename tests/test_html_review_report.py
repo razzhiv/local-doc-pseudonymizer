@@ -53,15 +53,21 @@ def test_html_review_report_generated_from_golden_synthetic_demo(tmp_path, monke
     html = html_path.read_text(encoding="utf-8")
 
     assert html_path.exists()
-    assert "BeforeSending HTML Review Report" in html
-    assert "Sensitive local artifact" in html
-    assert "pseudonymization / masking / risk reduction" in html
-    assert "Category And Token Counts" in html
-    assert "Findings And Replacements" in html
-    assert "Manual Review Checklist" in html
-    assert "Cleanup Guidance" in html
-    assert "PERSON" in html
-    assert "INN" in html
+    assert '<html lang="ru">' in html
+    assert "BeforeSending — отчёт проверки документа" in html
+    assert "Важное предупреждение" in html
+    assert "снижает риск раскрытия данных" in html
+    assert "Краткая сводка" in html
+    assert "Категории найденных данных" in html
+    assert "Найденные замены" in html
+    assert "Что требует ручной проверки" in html
+    assert "Пропущенные / skipped findings" in html
+    assert "Чеклист перед отправкой" in html
+    assert "Безопасная очистка локальных артефактов" in html
+    assert "Ограничения" in html
+    assert "Техническая информация" in html
+    assert "ФИО / персона (PERSON)" in html
+    assert "ИНН (INN)" in html
     assert "[INN_1]" in html
 
 
@@ -92,6 +98,11 @@ def test_html_review_report_has_no_external_network_resources():
         generated_at="2026-06-01 12:00:00",
     )
     lower = html.lower()
+
+    assert "Email / электронная почта (EMAIL)" in html
+    assert "Подозрительных или спорных кейсов для ручной проверки нет." in html
+    assert "Пропущенные находки не записаны." in html
+    assert "Предупреждений обработки нет." in html
 
     for forbidden in ["http://", "https://", "<script", "<link", "@import", "url(", " href=", " src="]:
         assert forbidden not in lower
