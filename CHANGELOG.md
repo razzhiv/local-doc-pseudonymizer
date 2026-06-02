@@ -1,5 +1,36 @@
 # CHANGELOG
 
+## 2026-06-02 - Sprint 1.9 - Windows quickstart packaging / release hygiene
+
+### Added
+
+- Added Windows-friendly scripts:
+  - `scripts/setup_windows.bat`
+  - `scripts/prepare_documents_windows.bat`
+  - `scripts/restore_documents_windows.bat`
+  - `scripts/run_demo_windows.bat`
+  - `scripts/cleanup_local_windows.bat`
+- Added `docs/windows_quickstart.md` with the recommended folder workflow: setup, put DOCX/text-layer PDF files into `input\`, prepare, review `output\` and `review\`, restore only when needed.
+- Added `tools/check_release_hygiene.py` to audit tracked files by default and extracted release artifacts with `--scan-all`.
+- Added pytest coverage for release hygiene checks.
+- Added `docs/release_artifacts.md` with clean tracked-state release guidance.
+- Added `scripts/windows_messages.py` for Russian/English Windows script messages while keeping `.bat` files ASCII-safe.
+
+### Changed
+
+- Updated README, docs index, release checklist, STATUS, and ROADMAP for Windows-first setup/run/release hygiene.
+- Documented `.venv` as a local generated folder that must not be included in release ZIPs or committed.
+- Documented that public/release artifacts should be created from clean tracked files, preferably with `git archive`, not by manually zipping the working directory.
+- Clarified that Sprint 1.9 is a Windows quickstart / local setup script / release-folder workflow, not a desktop app, production installer, system-wide install, or full uninstaller.
+- Added a strategic note that app-like launcher design spike vs local desktop launcher MVP is a separate pending decision.
+
+### Safety notes
+
+- Folder-based Windows packaging only; recognizer behavior was not changed.
+- The cleanup helper performs normal deletion of local generated folders only; it is not secure deletion and does not remove the project folder itself.
+- No OCR, GUI, encrypted vault implementation, DLP behavior, compliance positioning, real documents, real personal data, generated token maps, or production security claims were added.
+- Restore remains plaintext-dictionary based and requires explicit warning/confirmation in the Windows restore script.
+
 ## 2026-06-02 - Sprint 1.8 - Encrypted vault design spike
 
 ### Added

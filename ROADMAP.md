@@ -4,15 +4,15 @@ BeforeSending is an experimental local-first document pseudonymization / reversi
 
 It is focused on preparing DOCX and text-layer PDF documents before external AI/SaaS use, contractor sharing or other third-party processing.
 
-## Current checkpoint - v0.2-alpha candidate / Sprint 1.8 vault design spike
+## Current checkpoint - v0.2-alpha candidate / Sprint 1.9 Windows quickstart packaging
 
-Status: Sprint 1.8 docs-only encrypted vault boundary design.
+Status: Sprint 1.9 Windows quickstart, local project-folder workflow, setup/demo/prepare/restore/cleanup batch scripts, and release hygiene checker.
 
 Current verified baseline:
 
 ```text
 PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
-Pytest: 13 passed
+Pytest: 17 passed
 ```
 
 What is now aligned:
@@ -27,6 +27,8 @@ What is now aligned:
 - latest synthetic regression report.
 - synthetic quality metrics dashboard by category.
 - Sprint 1.8 vault boundary design for a future password-based encrypted token dictionary vault.
+- Sprint 1.9 Windows quickstart scripts and clean release artifact hygiene.
+- Sprint 1.9 local cleanup helper for generated environment/runtime folders.
 
 ## v0.1-alpha — released MVP baseline
 
@@ -88,6 +90,22 @@ Documented the sensitive boundary for plaintext token dictionaries, reports, raw
 
 This sprint is documentation only. It does not implement encryption or change recognizer behavior.
 
+### Sprint 1.9 - Windows quickstart packaging
+
+Added a Windows-first folder workflow:
+
+- `scripts/setup_windows.bat`;
+- `scripts/prepare_documents_windows.bat`;
+- `scripts/restore_documents_windows.bat`;
+- `scripts/run_demo_windows.bat`;
+- `scripts/cleanup_local_windows.bat`.
+
+Added `tools/check_release_hygiene.py` and release artifact documentation so public ZIPs are created from clean tracked files instead of manually zipping the working directory.
+
+This sprint delivers Windows quickstart and a release-folder workflow, not a desktop app, production installer, system-wide installation, or full uninstaller. The cleanup helper removes generated local folders inside one project copy and is not secure deletion.
+
+This sprint does not change recognizer behavior, add OCR, add encryption, implement a GUI, or introduce compliance/DLP claims.
+
 ## v0.2-alpha candidate goals
 
 A `v0.2-alpha` tag should be considered only after:
@@ -95,8 +113,19 @@ A `v0.2-alpha` tag should be considered only after:
 - a clean final verification pass;
 - a GitHub Actions run on the target public repository;
 - review that the public tree contains no real documents, dictionaries, reports, archives or generated private working files;
+- a manual Windows smoke test from a fresh folder or extracted release ZIP;
+- confirmation that quickstart/cleanup wording does not imply a desktop app or production installer;
 - confirmation that dependency licenses have been reviewed for the versions actually used;
 - a release note that clearly says experimental MVP / not compliance / not DLP / manual review required.
+
+## Product direction decision pending
+
+After Sprint 1.9, the next product-direction decision should be made in a separate strategy session:
+
+- app-like launcher design spike;
+- local desktop launcher MVP.
+
+Neither direction is chosen yet, and Sprint 2.0 is not decided here. Sprint 1.9 delivered Windows quickstart and release-folder workflow, not an app.
 
 ## Next technical tracks
 
@@ -125,14 +154,14 @@ Possible focus:
 - explicit limitations;
 - no OCR.
 
-### Track C - product-release packaging / one-command Windows setup
+### Track C - product-release finalization
 
 Possible focus:
 
 - clean `v0.2-alpha` release note;
 - public example walkthrough using synthetic data only;
-- one-command Windows setup;
-- installer/CLI polish;
+- manual Windows smoke test from a fresh folder;
+- local setup-script / CLI polish without app-installer claims;
 - screenshots generated only from synthetic examples;
 - dependency pinning / license review.
 
@@ -154,7 +183,7 @@ Possible focus:
 
 Possible future work:
 
-- desktop GUI;
+- desktop GUI or launcher only after a separate product-direction decision;
 - encrypted local vault;
 - visual review;
 - OCR and scanned document handling;

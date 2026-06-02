@@ -2,13 +2,13 @@
 
 Date: 2026-06-02
 Project: BeforeSending / local-doc-pseudonymizer
-Status: `v0.2-alpha candidate` with Sprint 1.8 encrypted vault design spike documentation. Not a production security or compliance product.
+Status: `v0.2-alpha candidate` with Sprint 1.9 Windows quickstart packaging, local cleanup helper, and release hygiene. Not a production security or compliance product.
 
 ## Current verified baseline
 
 ```text
 Synthetic regression: PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
-Pytest smoke/document/report/quality tests: 13 passed
+Pytest smoke/document/report/quality/release-hygiene tests: 17 passed
 Quality metrics dashboard: generated from strict synthetic regression results
 ```
 
@@ -19,6 +19,8 @@ python -m py_compile pseudonymize.py html_review_report.py quality_metrics.py ru
 python run_regression_tests.py run-strict
 python run_regression_tests.py quality-metrics
 python -m pytest -q
+python tools/check_release_hygiene.py
+git diff --check
 ```
 
 On Windows, use the repository virtual environment if available:
@@ -28,6 +30,8 @@ On Windows, use the repository virtual environment if available:
 .\.venv\Scripts\python.exe run_regression_tests.py run-strict
 .\.venv\Scripts\python.exe run_regression_tests.py quality-metrics
 .\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe tools\check_release_hygiene.py
+git diff --check
 ```
 
 ## Completed checkpoints
@@ -43,6 +47,7 @@ On Windows, use the repository virtual environment if available:
 - Sprint 1.6 - quality metrics dashboard for synthetic regression categories.
 - Sprint 1.7 - Russian-first HTML review report UX for local human review.
 - Sprint 1.8 - encrypted vault boundary design spike for future token dictionary protection.
+- Sprint 1.9 - Windows quickstart packaging, folder-based batch scripts, and release hygiene checker.
 - Release/docs hygiene checkpoint - README, STATUS, ROADMAP, limitations, supported entities, issue safety, token dictionary warnings and release checklist aligned.
 
 ## Current scope
@@ -61,6 +66,9 @@ Supported:
 - Basic DOCX table row/column label context.
 - Minimal label-driven English profile for common personal-data fields.
 - Expanded label-driven Russian recognition coverage for legal/business synthetic cases.
+- Windows-first folder workflow through `scripts/setup_windows.bat`, `scripts/prepare_documents_windows.bat`, `scripts/restore_documents_windows.bat`, and `scripts/run_demo_windows.bat`.
+- Local cleanup helper through `scripts/cleanup_local_windows.bat` for generated environment/runtime folders inside one project copy.
+- Release hygiene checker for tracked trees and extracted release artifacts.
 
 Not supported:
 
@@ -70,6 +78,9 @@ Not supported:
 - Secure PDF redaction.
 - Encrypted local vault.
 - GUI review app.
+- Desktop app / app-like launcher.
+- Production installer or system-wide Windows installation.
+- Full system uninstaller.
 - Enterprise DLP features.
 - Legal or regulatory compliance guarantees.
 
@@ -82,6 +93,10 @@ HTML review reports generated from real documents are sensitive local artifacts 
 Quality metrics reports are intended only for synthetic regression results. They provide engineering visibility by category, not a compliance score, anonymization guarantee, or proof that false negatives are impossible.
 
 Sprint 1.8 adds documentation for a future password-based encrypted vault boundary. It is design-only: the current MVP still writes plaintext token dictionaries, and there is no cryptographic protection, secure deletion, persistent vault session, daemon, or "remember password" feature.
+
+Sprint 1.9 adds Windows quickstart scripts, a local cleanup helper, and a release hygiene checker. It is a local project-folder workflow, not a desktop app, production installer, system-wide install, or full uninstaller. It does not change recognizer behavior, add encryption, add OCR, or make release artifacts safe by itself; public artifacts should still be created from a clean tracked state.
+
+After Sprint 1.9, the next product-direction decision is pending and should be made in a separate strategy session: app-like launcher design spike vs local desktop launcher MVP. Neither direction is chosen yet.
 
 For future false negatives or false positives:
 
@@ -96,6 +111,7 @@ For future false negatives or false positives:
 Choose one track at a time:
 
 1. v0.2-alpha release note / tag preparation after one more clean verification pass.
-2. Packaging / one-command Windows setup as the next implementation-oriented track.
-3. Future encrypted vault implementation planning, only after design review, crypto library selection, and synthetic-only test design.
-4. PDF table extraction experiment for simple text-layer tables.
+2. Manual Windows smoke test from a fresh folder or extracted `git archive` ZIP.
+3. Separate strategy session for app-like launcher design spike vs local desktop launcher MVP.
+4. Future encrypted vault implementation planning, only after design review, crypto library selection, and synthetic-only test design.
+5. PDF table extraction experiment for simple text-layer tables.
