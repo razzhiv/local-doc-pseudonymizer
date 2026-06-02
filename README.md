@@ -2,24 +2,22 @@
 
 Local-first document pseudonymization / reversible masking / risk reduction for preparing DOCX and text-layer PDF documents before external AI/SaaS use.
 
-> ⚠️ This is an experimental local-first pseudonymization/masking tool.
-> It does not guarantee complete anonymization, does not provide legal compliance,
-> and is not an enterprise DLP solution.
-> Automated detection may produce false positives and false negatives.
-> Always review the output before sharing documents with third parties.
+## Safety warning
 
-Русская версия:
+> ВНИМАНИЕ: это инструмент снижения риска, а не гарантия полной анонимизации.
+> Автоматическое обнаружение может пропускать данные или срабатывать слишком широко.
+> Перед отправкой документов результат нужно проверить вручную.
 
-> ⚠️ Это экспериментальный локальный инструмент псевдонимизации / маскирования.
-> Он не гарантирует полную анонимизацию, не обеспечивает юридическое соответствие
-> 152-ФЗ/GDPR/HIPAA и не является DLP-системой.
-> Автоматическое обнаружение может давать пропуски и ложные срабатывания.
-> Перед передачей документов третьим лицам результат необходимо проверять вручную.
+> WARNING: this is a risk-reduction tool, not a guarantee of complete anonymization.
+> Automated detection may miss data or over-mask content.
+> Always review the result manually before sharing documents.
+
+BeforeSending is not a 152-FZ/GDPR/HIPAA compliance tool, not DLP, not OCR, not a zero-leakage solution, and not a production encrypted-vault product.
 
 ## Release status
 
 Current public status: `v0.1-alpha` / experimental MVP.
-Current working checkpoint: `v0.2-alpha candidate` with Sprint 1.7 Russian-first HTML review report UX; see [STATUS.md](STATUS.md).
+Current working checkpoint: `v0.2-alpha candidate` with Sprint 1.9 Windows quickstart packaging; see [STATUS.md](STATUS.md).
 
 Synthetic regression baseline:
 
@@ -28,7 +26,7 @@ PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
 Blocking errors: 0
 ```
 
-Pytest baseline: `13 passed` across document-level, golden demo, HTML report, and quality metrics tests.
+Pytest baseline: `17 passed` across document-level, golden demo, HTML report, quality metrics, and release hygiene tests.
 
 This release is intended for early local testing and review-driven improvement. It is not production security software, a compliance solution, or a guarantee of complete anonymization.
 
@@ -119,55 +117,66 @@ The mapping is stored locally in `project_dictionary.json`. This file is sensiti
 
 Encrypted vault support is not implemented yet. Sprint 1.8 documents the future vault boundary in `docs/vault_design.md`; current token dictionaries remain plaintext sensitive local files.
 
-## Quick start
+## Windows quick start
 
-Install dependencies:
+This is a Windows quickstart for a local project folder. It is not a desktop app, not a GUI app, not a production installer, and not a system-wide Windows installation.
 
-```bash
-pip install -r requirements.txt
-```
-
-Place DOCX/PDF files into:
+Recommended Windows folder workflow:
 
 ```text
-input/
+1. Run scripts\setup_windows.bat
+2. Put DOCX or text-layer PDF files into input\
+3. Run scripts\prepare_documents_windows.bat
+4. Review generated files in output\ and the local HTML report in review\
+5. Use scripts\restore_documents_windows.bat only when restoration is needed
 ```
 
-Run pseudonymization:
+Generated files:
 
-```bash
-python pseudonymize.py
+```text
+output\anonymized\
+output\project_dictionary.json
+output\anonymization_report.json
+output\anonymization_report.docx
+output\reports\review_report_latest.html
+review\review_report_latest.html
 ```
 
-Or on Windows:
+Папка `.venv` не входит в release ZIP и не должна коммититься.
+Она создаётся локально на вашем компьютере командой `setup_windows.bat`.
+Если вы переносите проект в другую папку или на другой компьютер, создайте `.venv` заново.
+
+The `.venv` folder is not included in the release ZIP and must not be committed.
+It is created locally on your computer by `setup_windows.bat`, which installs Python dependencies into this project folder only.
+If you move the project to another folder or another computer, recreate `.venv`.
+
+For a synthetic-only demo, run:
 
 ```bat
-pseudonymize.bat
+scripts\run_demo_windows.bat
 ```
 
-Processed files are written to:
+The demo runs in an isolated synthetic runtime folder under `output\demo_runtime_<random>\`, so it does not depend on real files or previous local artifacts in the main `input\` / `output\` folders. It also copies the demo HTML report to `review\demo_review_report_latest.html`.
 
-```text
-output/anonymized/
+To clean local generated folders in this project copy, run:
+
+```bat
+scripts\cleanup_local_windows.bat
 ```
 
-The token dictionary is written to:
+This cleanup helper removes only generated local environment/runtime folders such as `.venv`, `input`, `output`, `review`, `to_decode`, `feedback`, `__pycache__`, and `.pytest_cache` inside the current project folder. It is not a system uninstaller and not secure deletion. Files may remain in Recycle Bin, backups, cloud sync, SSD traces, or other copies. To fully remove the tool, close all files/windows and delete the project folder manually.
 
-```text
-output/project_dictionary.json
-```
+## Advanced CLI
 
-To restore tokens in an edited DOCX, place the file into:
-
-```text
-to_decode/
-```
-
-and run:
+The scripts above are the main Windows user flow. Advanced users can still run the existing Python entrypoints directly:
 
 ```bash
+python -m pip install -r requirements.txt
+python pseudonymize.py
 python restore_tokens.py
 ```
+
+`pseudonymize.py` processes DOCX/PDF files from `input/`. `restore_tokens.py` restores edited tokenized DOCX files from `to_decode/` using the matching local `output/project_dictionary.json`.
 
 ## Sensitive local files
 
@@ -300,6 +309,8 @@ Use synthetic examples only.
 Key docs:
 
 - `STATUS.md` — current checkpoint and verified baseline.
+- `docs/windows_quickstart.md` - practical Windows setup, prepare, demo, and restore workflow.
+- `docs/release_artifacts.md` - clean release artifact guidance and hygiene checker.
 - `docs/positioning.md` — project scope and positioning.
 - `docs/limitations.md` — known limitations.
 - `docs/supported_entities.md` — experimental entity coverage.
