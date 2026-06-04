@@ -12,6 +12,7 @@ python run_regression_tests.py run-strict
 python run_regression_tests.py quality-metrics
 python -m pytest -q
 python tools/check_release_hygiene.py
+python tools/check_public_terms.py
 git diff --check
 ```
 
@@ -19,7 +20,7 @@ Expected current baseline:
 
 ```text
 PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
-17 passed
+20 passed
 ```
 
 On Windows with the repository virtual environment:
@@ -30,6 +31,7 @@ On Windows with the repository virtual environment:
 .\.venv\Scripts\python.exe run_regression_tests.py quality-metrics
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe tools\check_release_hygiene.py
+.\.venv\Scripts\python.exe tools\check_public_terms.py
 git diff --check
 ```
 
@@ -59,6 +61,12 @@ Confirm that the public tree does not include:
 - ZIP/RAR/7Z archives with working materials;
 - downloaded model archives, embeddings or dictionary caches;
 - private manual rule files.
+
+## Public wording check
+
+Run `python tools/check_public_terms.py` from the repository root. The check scans git-tracked public text files for forbidden private/product terms, public roadmap promises, and over-strong security claims.
+
+Confirm that public docs, issue templates, PR templates, release notes, and examples do not include private terms or product roadmap promises. They should not claim GUI/app/launcher/integration/vault commitments, compliance, DLP, zero-leakage, or guaranteed anonymization.
 
 ## Documentation check
 

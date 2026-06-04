@@ -6,7 +6,7 @@ This project is currently an experimental MVP. Security and privacy-related repo
 
 ## Reporting a vulnerability or privacy issue
 
-Please do **not** open public issues containing real personal data, confidential documents, token dictionaries, screenshots with personal data, or production review reports.
+Please do **not** open public issues containing real personal data, confidential documents, real IDs, INNs, passports, addresses, contracts, screenshots with PII, token dictionaries, `project_dictionary.json`, `dictionary.json`, token maps, raw text, or real generated reports.
 
 Use synthetic examples only.
 
@@ -14,12 +14,16 @@ If you need to describe a privacy issue, replace all real values with fictional 
 
 ## Sensitive data
 
+The token dictionary is a plaintext sensitive recovery key. Pseudonymized or anonymized output plus the matching dictionary can reconstruct original sensitive content. Never commit, upload, paste, screenshot, email, or share it.
+
 Do not share:
 
 - real input documents;
 - real output documents;
 - `project_dictionary.json`;
 - `dictionary.json`;
+- token maps;
+- raw text or extracted text from real documents;
 - `rules/manual_hide.txt`;
 - `rules/manual_allow.txt`;
 - `feedback/cases.jsonl` generated from real documents;

@@ -27,6 +27,7 @@ Run verification first:
 .\.venv\Scripts\python.exe run_regression_tests.py quality-metrics
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe tools\check_release_hygiene.py
+.\.venv\Scripts\python.exe tools\check_public_terms.py
 git diff --check
 ```
 
@@ -41,6 +42,8 @@ If you inspect an extracted release folder, run:
 ```bat
 .\.venv\Scripts\python.exe tools\check_release_hygiene.py --root path\to\extracted-release --scan-all
 ```
+
+The normal tracked-tree release hygiene command also checks public wording. You can run `.\.venv\Scripts\python.exe tools\check_public_terms.py` directly for an explicit private-term, public-roadmap, and over-strong security-claim scan.
 
 ## What Must Not Be Included
 

@@ -8,7 +8,7 @@ Status: `v0.2-alpha candidate` with Sprint 1.9 Windows quickstart packaging, loc
 
 ```text
 Synthetic regression: PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
-Pytest smoke/document/report/quality/release-hygiene tests: 17 passed
+Pytest smoke/document/report/quality/release-hygiene/public-terms tests: 20 passed
 Quality metrics dashboard: generated from strict synthetic regression results
 ```
 
@@ -20,6 +20,7 @@ python run_regression_tests.py run-strict
 python run_regression_tests.py quality-metrics
 python -m pytest -q
 python tools/check_release_hygiene.py
+python tools/check_public_terms.py
 git diff --check
 ```
 
@@ -31,6 +32,7 @@ On Windows, use the repository virtual environment if available:
 .\.venv\Scripts\python.exe run_regression_tests.py quality-metrics
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe tools\check_release_hygiene.py
+.\.venv\Scripts\python.exe tools\check_public_terms.py
 git diff --check
 ```
 
@@ -69,6 +71,7 @@ Supported:
 - Windows-first folder workflow through `scripts/setup_windows.bat`, `scripts/prepare_documents_windows.bat`, `scripts/restore_documents_windows.bat`, and `scripts/run_demo_windows.bat`.
 - Local cleanup helper through `scripts/cleanup_local_windows.bat` for generated environment/runtime folders inside one project copy.
 - Release hygiene checker for tracked trees and extracted release artifacts.
+- Public terms checker for tracked public text files.
 
 Not supported:
 

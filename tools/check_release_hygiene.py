@@ -8,6 +8,11 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Iterable
 
+try:
+    from tools.check_public_terms import analyze_tracked_public_text, format_findings as format_public_term_findings
+except ImportError:  # pragma: no cover - supports direct execution as tools/check_release_hygiene.py
+    from check_public_terms import analyze_tracked_public_text, format_findings as format_public_term_findings
+
 
 RUNTIME_DIRS = {
     "feedback",
@@ -236,14 +241,24 @@ def main(argv: list[str] | None = None) -> int:
         mode = "all files"
 
     findings = analyze_paths(paths)
-    if findings:
+    public_term_findings = analyze_tracked_public_text(root) if use_tracked else []
+
+    if findings or public_term_findings:
         print(f"Release hygiene check FAILED for {root} ({mode}).")
         print()
-        for finding in findings:
-            print(f"- {finding.path}: {finding.reason}")
+        if findings:
+            print("Sensitive path findings:")
+            for finding in findings:
+                print(f"- {finding.path}: {finding.reason}")
+            print()
+        if public_term_findings:
+            print("Public wording findings:")
+            for line in format_public_term_findings(public_term_findings):
+                print(line)
         print()
         print("Create public artifacts from a clean tracked state, for example with git archive,")
-        print("and keep local runtime folders, dictionaries, reports, logs, caches, and archives out.")
+        print("and keep local runtime folders, dictionaries, reports, logs, caches, archives,")
+        print("private terms, and public roadmap promises out.")
         return 1
 
     print(f"Release hygiene check passed for {root} ({mode}, {len(paths)} paths checked).")

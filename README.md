@@ -26,7 +26,7 @@ PASS 70 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 70
 Blocking errors: 0
 ```
 
-Pytest baseline: `17 passed` across document-level, golden demo, HTML report, quality metrics, and release hygiene tests.
+Pytest baseline: `20 passed` across document-level, golden demo, HTML report, quality metrics, release hygiene, and public terms tests.
 
 This release is intended for early local testing and review-driven improvement. It is not production security software and does not replace careful human review.
 
@@ -113,7 +113,7 @@ Output:
 Адрес регистрации: [POST_INDEX_1], г. Санкт-Петербург, [ADDRESS_DETAIL_1].
 ```
 
-The mapping is stored locally in `project_dictionary.json`. This file is sensitive and must not be shared.
+The mapping is stored locally in `project_dictionary.json`. This plaintext file is a sensitive recovery key and must not be committed, uploaded, pasted, screenshotted, emailed, or shared. Pseudonymized or anonymized output plus the matching dictionary can reconstruct original sensitive content.
 
 Current token dictionaries are plaintext sensitive local files. No protected dictionary storage feature is currently provided or publicly committed.
 
@@ -180,11 +180,11 @@ python restore_tokens.py
 
 ## Sensitive local files
 
-The token dictionary is sensitive.
+The token dictionary is a plaintext sensitive recovery key.
 
-If `project_dictionary.json` leaks, pseudonymized documents may become re-identifiable.
+If `project_dictionary.json` leaks, pseudonymized documents may become re-identifiable. Pseudonymized or anonymized output plus the matching dictionary can reconstruct original sensitive content.
 
-Do not commit, upload or share:
+Never commit, upload, paste, screenshot, email, or share:
 
 - `project_dictionary.json`;
 - `dictionary.json`;
