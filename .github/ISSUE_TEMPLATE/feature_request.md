@@ -6,14 +6,11 @@ labels: enhancement
 assignees: ""
 ---
 
-> ⚠️ Do not include real personal data, confidential documents, real INNs, passport numbers, addresses, contracts, screenshots or token dictionaries. Use synthetic examples only.
-
-> ⚠️ Не прикладывайте реальные персональные данные, реальные документы, ИНН, паспортные данные, адреса, договоры, скриншоты или словари токенов. Используйте только синтетические примеры.
-
+> Safety: Do not include real personal data, confidential documents, real IDs, INNs, passports, addresses, contracts, screenshots with PII, token dictionaries, `project_dictionary.json`, `dictionary.json`, token maps, raw text, or real generated reports. Use synthetic examples only.
 
 ## Problem
 
-Describe the problem.
+Describe the maintenance or documentation problem.
 
 ## Proposed maintenance change
 
@@ -25,8 +22,9 @@ Describe the narrow maintenance or documentation change.
 - [ ] Review workflow
 - [ ] Regression tests
 - [ ] Documentation
+- [ ] Public safety / release hygiene
 - [ ] Other maintenance
 
 ## Synthetic examples
 
-Use synthetic examples only.
+Use synthetic examples only. Do not include real documents, token dictionaries, token maps, raw text, screenshots with PII, or real generated reports.

@@ -32,8 +32,26 @@ project_dictionary.json
 dictionary.json
 **/project_dictionary.json
 **/dictionary.json
+**/*token_map*.json
+**/*token-map*.json
+**/*tokens_map*.json
+**/*tokens-map*.json
+**/*token_map*.txt
+**/*token-map*.txt
+**/*tokens_map*.txt
+**/*tokens-map*.txt
+**/*raw_text*.txt
+**/*raw-text*.txt
+**/*extracted_text*.txt
+**/*extracted-text*.txt
+**/*original_text*.txt
+**/*original-text*.txt
 output/anonymization_report.*
 output/reports/
+**/anonymization_report.*
+**/review_report_*.html
+**/quality_metrics_*.json
+**/quality_metrics_*.md
 
 # Manual rules may contain real sensitive values
 /rules/manual_hide.txt

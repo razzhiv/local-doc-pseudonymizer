@@ -2,7 +2,7 @@
 
 This file documents sensitive local-file boundaries. The current public repository does not commit to a protected dictionary-storage feature.
 
-The current implementation uses plaintext local token dictionaries such as `project_dictionary.json` and `dictionary.json`. Treat those files as sensitive recovery keys.
+The current implementation uses plaintext local token dictionaries such as `project_dictionary.json` and `dictionary.json`. Treat those files as sensitive recovery keys. Pseudonymized or anonymized output plus the matching dictionary can reconstruct original sensitive content.
 
 ## Current Public Status
 
@@ -67,7 +67,7 @@ A plaintext dictionary or token map is a recovery key.
 
 Risks:
 
-- masked output plus dictionary may be equivalent to the original sensitive content;
+- pseudonymized or anonymized output plus dictionary can reconstruct original sensitive content;
 - a dictionary can enable restoration even if the original document is unavailable;
 - logs or debug dumps of mappings can silently duplicate the dictionary.
 

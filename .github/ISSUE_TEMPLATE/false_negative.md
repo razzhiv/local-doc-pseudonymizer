@@ -6,31 +6,30 @@ labels: false-negative
 assignees: ""
 ---
 
-> ⚠️ Do not include real personal data, confidential documents, real INNs, passport numbers, addresses, contracts, screenshots or token dictionaries. Use synthetic examples only.
-
-> ⚠️ Не прикладывайте реальные персональные данные, реальные документы, ИНН, паспортные данные, адреса, договоры, скриншоты или словари токенов. Используйте только синтетические примеры.
-
+> Safety: Do not include real personal data, confidential documents, real IDs, INNs, passports, addresses, contracts, screenshots with PII, token dictionaries, `project_dictionary.json`, `dictionary.json`, token maps, raw text, or real generated reports. Use synthetic examples only.
 
 ## Entity type
 
 Example: PERSON / INN / PASSPORT / ADDRESS_DETAIL / ACCOUNT / PHONE
 
-## Synthetic input
+## Minimal synthetic reproduction
+
+Provide the smallest synthetic input that reproduces the missed masking. Do not paste the original document, raw extracted text, token dictionaries, token maps, screenshots with PII, or real generated reports.
 
 ```text
-ИНН: 781 234 567 890
+INN: 123 456 789 012
 ```
 
 ## Expected output
 
 ```text
-ИНН: [INN_1]
+INN: [INN_1]
 ```
 
 ## Actual output
 
 ```text
-ИНН: 781 234 567 890
+INN: 123 456 789 012
 ```
 
 ## Why this should be masked

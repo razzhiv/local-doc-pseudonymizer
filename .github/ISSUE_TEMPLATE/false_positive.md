@@ -6,31 +6,30 @@ labels: false-positive
 assignees: ""
 ---
 
-> ⚠️ Do not include real personal data, confidential documents, real INNs, passport numbers, addresses, contracts, screenshots or token dictionaries. Use synthetic examples only.
-
-> ⚠️ Не прикладывайте реальные персональные данные, реальные документы, ИНН, паспортные данные, адреса, договоры, скриншоты или словари токенов. Используйте только синтетические примеры.
-
+> Safety: Do not include real personal data, confidential documents, real IDs, INNs, passports, addresses, contracts, screenshots with PII, token dictionaries, `project_dictionary.json`, `dictionary.json`, token maps, raw text, or real generated reports. Use synthetic examples only.
 
 ## Entity type detected
 
 Example: PASSPORT / ACCOUNT / PHONE / CARD
 
-## Synthetic input
+## Minimal synthetic reproduction
+
+Provide the smallest synthetic input that reproduces the over-masking. Do not paste the original document, raw extracted text, token dictionaries, token maps, screenshots with PII, or real generated reports.
 
 ```text
-АКТ № 4012345678 от 10.01.2026
+Act number 4012345678 dated 10.01.2026
 ```
 
 ## Expected output
 
 ```text
-АКТ № 4012345678 от 10.01.2026
+Act number 4012345678 dated 10.01.2026
 ```
 
 ## Actual output
 
 ```text
-АКТ № [PASSPORT_1] от 10.01.2026
+Act number [PASSPORT_1] dated 10.01.2026
 ```
 
 ## Why this should not be masked
