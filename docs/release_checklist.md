@@ -94,12 +94,10 @@ Use:
 
 Do not claim:
 
-- guaranteed anonymization;
-- zero leakage;
-- legal compliance;
-- 152-FZ/GDPR/HIPAA compliance;
-- enterprise DLP;
-- compliance score;
+- that automated masking removes all sensitive data;
+- legal or regulatory assurance;
+- enterprise security governance;
+- a safety score;
 - OCR support for v0.1/v0.2 candidate.
 
 ## Release note check

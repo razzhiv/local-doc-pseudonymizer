@@ -1,8 +1,8 @@
 # Status
 
-Date: 2026-06-02
+Date: 2026-06-04
 Project: BeforeSending / local-doc-pseudonymizer
-Status: `v0.2-alpha candidate` with Sprint 1.9 Windows quickstart packaging, local cleanup helper, and release hygiene. Not a production security or compliance product.
+Status: `v0.2-alpha candidate` with Sprint 1.9 Windows quickstart packaging, local cleanup helper, release hygiene, and public documentation alignment for maintenance status.
 
 ## Current verified baseline
 
@@ -46,7 +46,7 @@ git diff --check
 - Sprint 1.5 - local self-contained HTML review report for human-in-the-loop review.
 - Sprint 1.6 - quality metrics dashboard for synthetic regression categories.
 - Sprint 1.7 - Russian-first HTML review report UX for local human review.
-- Sprint 1.8 - encrypted vault boundary design spike for future token dictionary protection.
+- Sprint 1.8 - token dictionary storage boundary notes.
 - Sprint 1.9 - Windows quickstart packaging, folder-based batch scripts, and release hygiene checker.
 - Release/docs hygiene checkpoint - README, STATUS, ROADMAP, limitations, supported entities, issue safety, token dictionary warnings and release checklist aligned.
 
@@ -76,13 +76,13 @@ Not supported:
 - Scanned PDFs.
 - Photos or embedded images.
 - Secure PDF redaction.
-- Encrypted local vault.
+- Protected dictionary storage beyond plaintext local files.
 - GUI review app.
-- Desktop app / app-like launcher.
+- Desktop-style application interface.
 - Production installer or system-wide Windows installation.
 - Full system uninstaller.
-- Enterprise DLP features.
-- Legal or regulatory compliance guarantees.
+- Enterprise security governance features.
+- Legal or regulatory assurance.
 
 ## Safety posture
 
@@ -90,15 +90,15 @@ Do not store real personal data in this repository.
 
 HTML review reports generated from real documents are sensitive local artifacts because they can include original values, tokens, review context, warnings, cleanup paths, and technical review notes. Do not upload, publish, commit, or share generated reports unless they are verified synthetic and intended for release.
 
-Quality metrics reports are intended only for synthetic regression results. They provide engineering visibility by category, not a compliance score, anonymization guarantee, or proof that false negatives are impossible.
+Quality metrics reports are intended only for synthetic regression results. They provide engineering visibility by category, not a safety score, proof that all sensitive data is removed, or proof that false negatives are impossible.
 
-Sprint 1.8 adds documentation for a future password-based encrypted vault boundary. It is design-only: the current MVP still writes plaintext token dictionaries, and there is no cryptographic protection, secure deletion, persistent vault session, daemon, or "remember password" feature.
+Sprint 1.8 documented token dictionary storage boundaries. The current MVP still writes plaintext token dictionaries, and no protected dictionary storage feature is provided or publicly committed.
 
 Sprint 1.9 adds Windows quickstart scripts, a local cleanup helper, and a release hygiene checker. It is a local project-folder workflow, not a desktop app, production installer, system-wide install, or full uninstaller. It does not change recognizer behavior, add encryption, add OCR, or make release artifacts safe by itself; public artifacts should still be created from a clean tracked state.
 
-After Sprint 1.9, the next product-direction decision is pending and should be made in a separate strategy session: app-like launcher design spike vs local desktop launcher MVP. Neither direction is chosen yet.
+After this documentation alignment, the public repository has no committed public product roadmap. Public work should stay limited to maintenance, documentation clarity, synthetic-only tests, and release hygiene unless a new public scope is explicitly approved.
 
-For future false negatives or false positives:
+For new false negatives or false positives:
 
 1. Collect only the structure of the miss.
 2. Rewrite the case into synthetic data.
@@ -106,12 +106,11 @@ For future false negatives or false positives:
 4. Change detection rules narrowly.
 5. Run the full verification commands above.
 
-## Next candidates
+## Maintenance candidates
 
-Choose one track at a time:
+Choose one narrow maintenance item at a time:
 
 1. v0.2-alpha release note / tag preparation after one more clean verification pass.
 2. Manual Windows smoke test from a fresh folder or extracted `git archive` ZIP.
-3. Separate strategy session for app-like launcher design spike vs local desktop launcher MVP.
-4. Future encrypted vault implementation planning, only after design review, crypto library selection, and synthetic-only test design.
-5. PDF table extraction experiment for simple text-layer tables.
+3. Documentation cleanup when wording could be misunderstood as a public feature promise.
+4. Synthetic-only regression maintenance for current supported behavior.

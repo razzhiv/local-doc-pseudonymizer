@@ -2,7 +2,7 @@
 
 BeforeSending is an experimental local-first pseudonymization / reversible masking / risk-reduction tool.
 
-It reduces risk, but does not eliminate all privacy or compliance risks.
+It reduces risk, but does not eliminate all privacy or disclosure risks.
 
 ## Detection limitations
 
@@ -61,9 +61,9 @@ If `project_dictionary.json` leaks, pseudonymized documents may become re-identi
 
 Even after tokenization, contextual clues may remain.
 
-## Not legal compliance
+## Not legal or regulatory assurance
 
-This project does not guarantee compliance with 152-FZ, GDPR, HIPAA or any other legal regime.
+This project does not provide legal or regulatory assurance for any legal regime.
 
 ## Manual review required
 

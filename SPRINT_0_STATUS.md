@@ -1,5 +1,7 @@
 # SPRINT 0 STATUS
 
+Historical note: this file records earlier sprint checkpoints. It is not a current public roadmap.
+
 ## Sprint 0.8-1.2 checkpoint - 2026-05-31
 
 Status: completed and merged into `main`; docs/release hygiene aligned in current working checkpoint.
@@ -31,7 +33,7 @@ Current verified baseline:
 - Synthetic regression: PASS 52 / FAIL 0 / XFAIL 0 / XPASS 0 / ERROR 0 / TOTAL 52
 - Document-level regression: 5 passed
 
-Current next candidates:
+Historical maintenance candidates at that checkpoint:
 
 - Russian recognition quality pack v2
 - PDF table extraction as a later experimental track
@@ -40,7 +42,7 @@ Current next candidates:
 
 
 
-_Проект: локальная псевдонимизация / masking документов перед передачей в SaaS / LLM / третьим лицам_
+_Проект: локальная псевдонимизация / masking документов перед передачей внешним сервисам / третьим лицам_
 
 _Статус на 2026-05-01: Sprint 0.2 и базовый Sprint 0.3 успешно пройдены._
 
@@ -306,7 +308,7 @@ XFAIL
 ```text
 выделить отдельный suspect-класс, например OCR_SUSPECT_INN_CHAR;
 не считать это VALID_INN;
-маскировать в SaaS-safe режиме только при явной метке ИНН.
+маскировать в режиме подготовки к внешней передаче только при явной метке ИНН.
 ```
 
 ---
@@ -794,7 +796,7 @@ Snapshot зафиксирован в папке:
 - не считать такое значение валидным `INN`;
 - выделить отдельный suspect-класс или расширить `OCR_SUSPECT_INN`;
 - срабатывать только рядом с явной меткой `ИНН`;
-- сохранять осторожную SaaS-safe логику: mask and review;
+- сохранять осторожную логику подготовки к внешней передаче: mask and review;
 - добавить negative tests для актов, сертификатов и обращений.
 
 ### 11.7. Архитектурный вывод Sprint 0.5
@@ -821,15 +823,15 @@ Sprint 0.5 также подтвердил, что текущий synthetic corp
 - защищает от возврата старых ошибок;
 - позволяет проверять точечные изменения;
 - не требует реальных персональных данных;
-- подходит для будущего GitHub-safe контура.
+- подходит для GitHub-safe контура.
 
-### 11.8. Рекомендуемый следующий шаг
+### 11.8. Исторический рекомендуемый следующий шаг
 
 Sprint 0.5 можно считать закрытым как successful hardening phase.
 
-Следующие возможные направления:
+Возможные направления на тот момент:
 
-#### Вариант A — GitHub / public MVP preparation
+#### Вариант A — GitHub / public documentation preparation
 
 Вернуться к оформлению GitHub-safe версии:
 

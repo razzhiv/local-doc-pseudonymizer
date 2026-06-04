@@ -1,7 +1,7 @@
 ---
-name: Feature request
-about: Suggest a feature or improvement
-title: "[Feature]: "
+name: Maintenance request
+about: Suggest a narrow maintenance or documentation improvement using synthetic examples only
+title: "[Maintenance]: "
 labels: enhancement
 assignees: ""
 ---
@@ -15,9 +15,9 @@ assignees: ""
 
 Describe the problem.
 
-## Proposed solution
+## Proposed maintenance change
 
-Describe the solution.
+Describe the narrow maintenance or documentation change.
 
 ## Scope
 
@@ -25,7 +25,7 @@ Describe the solution.
 - [ ] Review workflow
 - [ ] Regression tests
 - [ ] Documentation
-- [ ] Other
+- [ ] Other maintenance
 
 ## Synthetic examples
 

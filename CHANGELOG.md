@@ -22,28 +22,28 @@
 - Documented `.venv` as a local generated folder that must not be included in release ZIPs or committed.
 - Documented that public/release artifacts should be created from clean tracked files, preferably with `git archive`, not by manually zipping the working directory.
 - Clarified that Sprint 1.9 is a Windows quickstart / local setup script / release-folder workflow, not a desktop app, production installer, system-wide install, or full uninstaller.
-- Added a strategic note that app-like launcher design spike vs local desktop launcher MVP is a separate pending decision.
+- Added wording that the Windows flow remains a local project-folder workflow, not an app-style product direction.
 
 ### Safety notes
 
 - Folder-based Windows packaging only; recognizer behavior was not changed.
 - The cleanup helper performs normal deletion of local generated folders only; it is not secure deletion and does not remove the project folder itself.
-- No OCR, GUI, encrypted vault implementation, DLP behavior, compliance positioning, real documents, real personal data, generated token maps, or production security claims were added.
+- No OCR, app interface, protected dictionary storage, enterprise security behavior, legal/regulatory positioning, real documents, real personal data, generated token maps, or production security claims were added.
 - Restore remains plaintext-dictionary based and requires explicit warning/confirmation in the Windows restore script.
 
-## 2026-06-02 - Sprint 1.8 - Encrypted vault design spike
+## 2026-06-02 - Sprint 1.8 - Token dictionary storage boundary notes
 
 ### Added
 
-- Added `docs/vault_design.md` documenting the sensitive boundary for token dictionaries, raw extracted text, reports, runtime artifacts, public issue safety, and a possible future encrypted vault.
-- Expanded `docs/token_dictionary_security.md` with report/log boundaries, cleanup wording, future vault constraints, and public-claim limits.
+- Added token dictionary storage boundary notes documenting the sensitive boundary for token dictionaries, raw extracted text, reports, runtime artifacts, and public issue safety.
+- Expanded `docs/token_dictionary_security.md` with report/log boundaries, cleanup wording, storage-boundary constraints, and public-claim limits.
 - Updated README, docs index, STATUS, and ROADMAP with short pointers to the Sprint 1.8 design.
 
 ### Safety notes
 
-- Documentation-only design spike; no production encryption was implemented.
+- Documentation-only boundary note; no production protected dictionary storage was implemented.
 - Recognizer rules, detection behavior, pseudonymization behavior, and restore behavior were not changed.
-- No crypto dependencies, GUI, OCR, PDF table extraction, packaging, installer, cloud storage, AI automation integration, real documents, generated reports, dictionaries, screenshots, ZIPs, or token maps were added.
+- No crypto dependencies, app interface, OCR, PDF table extraction, packaging, installer, cloud storage, automation integration, real documents, generated reports, dictionaries, screenshots, ZIPs, or token maps were added.
 - The current MVP still uses plaintext token dictionaries and must not be described as cryptographically protected.
 
 ## 2026-06-01 - Sprint 1.7 - Russian-first HTML review report / review UX localization
@@ -59,8 +59,8 @@
 
 - Display-only localization; recognizer rules and detection behavior were not changed.
 - The HTML report remains self-contained with inline CSS and no external CSS, JavaScript, CDN, or network resources.
-- The report remains a local human-review aid for pseudonymization / reversible masking / risk reduction, not a guarantee of anonymization, regulatory compliance, DLP coverage, or zero leakage.
-- No OCR, PDF table extraction, GUI, encrypted vault, packaging, installer, real documents, or real personal data were added.
+- The report remains a local human-review aid for pseudonymization / reversible masking / risk reduction, not proof that all sensitive data has been removed.
+- No OCR, PDF table extraction, app interface, protected dictionary storage, packaging, installer, real documents, or real personal data were added.
 
 ## 2026-06-01 - Sprint 1.6 - Quality metrics dashboard / categories
 
@@ -83,8 +83,8 @@
 ### Safety notes
 
 - Synthetic regression data only.
-- The dashboard is engineering visibility, not a compliance score, anonymization guarantee, or proof that false negatives are impossible.
-- No OCR, GUI, vault/encryption, packaging, PDF table extraction, or recognizer-rule rewrite.
+- The dashboard is engineering visibility, not a safety score, proof that all sensitive data has been removed, or proof that false negatives are impossible.
+- No OCR, app interface, protected dictionary storage, packaging, PDF table extraction, or recognizer-rule rewrite.
 - Generated runtime reports remain under ignored `output/reports/` and are not intended for commit.
 
 ## 2026-06-01 - Sprint 1.5 - Review UX v0.1 / HTML review report
@@ -103,7 +103,7 @@
 ### Safety notes
 
 - Synthetic fixtures only.
-- No OCR, PDF table extraction, GUI, vault/encryption, recognizer rewrite, packaging, installer, or compliance-positioning change.
+- No OCR, PDF table extraction, app interface, protected dictionary storage, recognizer rewrite, packaging, installer, or legal/regulatory-positioning change.
 - No generated dictionary, runtime input/output/review/to_decode artifact, cache, virtual environment, or private file is intended for commit.
 
 ## 2026-06-01 — Sprint 1.4 — Golden synthetic demo + release-ready story
@@ -122,7 +122,7 @@
 ### Safety notes
 
 - Synthetic data only.
-- No OCR, PDF table extraction, GUI, vault/encryption, recognizer rewrite, packaging, or compliance-positioning change.
+- No OCR, PDF table extraction, app interface, protected dictionary storage, recognizer rewrite, packaging, or legal/regulatory-positioning change.
 - No generated dictionary, runtime input/output/review/to_decode artifact, cache, virtual environment, or private file is intended for commit.
 
 ## 2026-05-01 — Sprint 0.2 / controlled improvement loop
@@ -160,7 +160,7 @@ PASS  test_phone_ru_positive_001
 
 ## 2026-05-01 — Sprint 0.3 / synthetic corpus hardening
 
-### Planned / in progress
+### Historical planned items at that time
 
 - Расширение synthetic regression set вокруг опасных зон:
   - ИНН 10/12/13 цифр;
@@ -313,7 +313,7 @@ Current status:
 - There were no JSONL format errors.
 - There were no blocking regression errors after converting the two newly discovered weak spots to `XFAIL`.
 
-### Next recommended controlled improvement
+### Historical next recommended controlled improvement
 
 Candidate:
 
@@ -561,14 +561,14 @@ restore_tokens.py
 2_deanonymize.py
 ```
 
-- Added public Windows batch launchers:
+- Added public Windows batch wrappers:
 
 ```text
 pseudonymize.bat
 restore_tokens.bat
 ```
 
-- Updated legacy batch launchers to call the new public entrypoints.
+- Updated legacy batch wrappers to call the new public entrypoints.
 
 ### Added
 
@@ -619,7 +619,7 @@ PASS: restore smoke test succeeded.
 ### Changed
 
 - Added explicit `v0.1-alpha / experimental MVP` release status to README.
-- Clarified that the current public release is an experimental local-first MVP, not production security/compliance software.
+- Clarified that the current public release is an experimental local-first MVP, not production security software or legal/regulatory assurance.
 - Added a short `v0.1-alpha polish` section to ROADMAP.
 
 ### Regression status
@@ -637,7 +637,7 @@ Blocking errors: 0
 
 - INN with spaces and INN OCR-letter substitution remain known XFAIL gaps.
 - Those gaps are intentionally deferred to a separate mini-sprint.
-- This polish step is intended to prepare the repository for a future `v0.1-alpha` tag/release.
+- This polish step was intended to prepare the repository for the later `v0.1-alpha` tag/release.
 
 ## 2026-05-03 — v0.1-alpha released
 
@@ -681,7 +681,7 @@ Blocking errors: 0
 
 - No broad long-number detector was added.
 - Service-number contexts remain protected by regression tests.
-- No OCR engine, GUI, encrypted vault, or release work was added.
+- No OCR engine, app interface, protected dictionary storage, or release work was added.
 
 ## 2026-05-05 — Sprint 0.7 — public baseline alignment
 
@@ -767,7 +767,7 @@ Document-level pytest: 5 passed
 
 - No real personal data was added.
 - No new core detection behavior was added in this docs/release hygiene checkpoint.
-- Future false negatives should continue to be rewritten into synthetic regression cases before rule changes.
+- New false negatives should continue to be rewritten into synthetic regression cases before rule changes.
 
 ## 2026-06-01 — Sprint 1.3 — Russian recognition quality pack v2
 
@@ -797,4 +797,4 @@ Document-level pytest: 5 passed
 ### Safety notes
 
 - Synthetic data only.
-- No PDF table extraction, OCR, GUI, encrypted vault, packaging, positioning or compliance behavior was changed.
+- No PDF table extraction, OCR, app interface, protected dictionary storage, packaging, positioning or legal/regulatory behavior was changed.

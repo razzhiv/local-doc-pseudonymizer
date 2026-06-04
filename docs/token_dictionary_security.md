@@ -18,10 +18,10 @@ If the dictionary leaks, pseudonymized documents may become re-identifiable.
 
 The dictionary is effectively a recovery key for the original sensitive values.
 
-For the Sprint 1.8 vault boundary design, see:
+For additional storage-boundary notes, see:
 
 ```text
-docs/vault_design.md
+docs/token_dictionary_storage_boundary.md
 ```
 
 ## Pseudonymized output + dictionary = recoverable data
@@ -36,7 +36,7 @@ Never commit:
 
 - `project_dictionary.json`;
 - `dictionary.json`;
-- local vault files;
+- local protected-storage files, if any are created outside this public baseline;
 - manual rule files containing real values;
 - review reports containing original values;
 - feedback files generated from real documents.
@@ -49,10 +49,9 @@ Do not upload dictionaries to:
 
 - GitHub issues;
 - pull requests;
-- SaaS tools;
+- external services;
 - messengers;
 - email threads;
-- external AI services;
 - shared cloud folders unless that is an explicit approved security process.
 
 Do not share screenshots, ZIPs, logs, tracebacks or terminal output if they show dictionary contents, raw extracted text, original values, token maps or real review reports.
@@ -61,7 +60,7 @@ Do not share screenshots, ZIPs, logs, tracebacks or terminal output if they show
 
 Store dictionaries locally and restrict access.
 
-For sensitive cases, consider encrypted storage outside the project folder.
+For sensitive cases, use appropriate local storage controls outside the project folder and keep dictionaries out of shared folders.
 
 Avoid keeping token dictionaries longer than the workflow requires.
 
@@ -77,7 +76,7 @@ If the dictionary was generated from real documents, do not archive it inside th
 
 Do not promise secure deletion. Normal deletion may leave data in SSD blocks, backups, cloud sync, filesystem snapshots, editor caches, temp files, older copies, or OS-level artifacts.
 
-Cleanup guidance can reduce accidental exposure, but it cannot guarantee that old data is unrecoverable.
+Cleanup guidance can reduce accidental exposure, but it cannot prove that old data is unrecoverable.
 
 ## Reports and logs
 
@@ -90,7 +89,7 @@ Do not log:
 - raw extracted text;
 - plaintext dictionary contents;
 - passwords;
-- future decrypted vault payloads.
+- decrypted protected-storage payloads, if any exist outside this public baseline.
 
 HTML review reports based on real documents are sensitive local artifacts. Public screenshots, examples and quality metrics must be synthetic-only.
 
@@ -98,7 +97,7 @@ HTML review reports based on real documents are sensitive local artifacts. Publi
 
 The current MVP does not provide:
 
-- encrypted vault;
+- protected dictionary storage beyond plaintext local files;
 - key management;
 - secure deletion;
 - access control;
@@ -107,20 +106,8 @@ The current MVP does not provide:
 
 If encryption is not implemented and configured, the dictionary must not be considered cryptographically protected.
 
-## Future encrypted vault
+No protected dictionary storage feature is currently provided or publicly committed.
 
-A future version may include encrypted local vault support.
+Plaintext dictionaries remain sensitive local files.
 
-Design constraints for a future MVP vault:
-
-- password-based;
-- unlocked only for the current operation;
-- no daemon;
-- no persistent unlocked session;
-- no "remember password" file;
-- no unlocked session cache;
-- no password in CLI arguments, config files, `.env`, shell history, logs or reports.
-
-Until that future mode is implemented, tested, documented and enabled, plaintext dictionaries remain sensitive local files.
-
-Do not make cryptographic safety, guaranteed anonymization, zero-leakage, DLP or legal-compliance claims for the current dictionary workflow.
+Do not claim production security protection, legal or regulatory assurance, or that all sensitive data has been removed from the current dictionary workflow.

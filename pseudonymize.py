@@ -13,7 +13,7 @@ from html_review_report import build_html_review_report
 
 # ============================================================
 # Локальная обратимая псевдонимизация документов v3.5 / Sprint 0
-# Режим по умолчанию: SaaS-safe
+# Режим по умолчанию: подготовка к внешней передаче
 #
 # Что изменено после теста на реальных данных:
 # - телефонные RegEx стали консервативнее, чтобы не ломать номера актов/сертификатов/ИНН;
@@ -1002,7 +1002,7 @@ def find_regex_entities(text):
 
     add_pattern_findings(findings, text, r"\b\d{1,2}\.\d{4,8},\s*\d{1,2}\.\d{4,8}\b", "COORDS", "regex_coords", comment="Координаты")
 
-    # Судебные идентификаторы для SaaS-safe режима скрываем
+    # Судебные идентификаторы скрываем перед внешней передачей
     add_pattern_findings(findings, text, r"\b\d{2}RS\d{4}-\d{2}-\d{4}-\d{6}-\d{2}\b", "COURT_UID", "regex_court_uid", flags=re.IGNORECASE, comment="UID суда / ГАС")
     add_pattern_findings(findings, text, r"\b[МM]-\d+/\d{4}\b", "COURT_MATERIAL", "regex_court_material", comment="Номер судебного материала")
     add_pattern_findings(findings, text, r"\b(?:дело|гражданское\s+дело)\s*№?\s*([0-9]{1,2}-[0-9]+/[0-9]{4})\b", "COURT_CASE", "regex_court_case_context", flags=re.IGNORECASE, group=1, comment="Номер судебного дела")
@@ -1805,7 +1805,7 @@ def save_markdown_report(report):
     lines.append(f"Дата обработки: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     lines.append("Версия: v3.5 / Sprint 0")
     lines.append("")
-    lines.append("> Внимание: отчёт может содержать исходные персональные/конфиденциальные данные. Не отправляйте его в SaaS и третьим лицам.")
+    lines.append("> Внимание: отчёт может содержать исходные персональные/конфиденциальные данные. Не отправляйте его внешним сервисам или третьим лицам.")
     lines.append("")
 
     total_summary = Counter()
@@ -1922,9 +1922,9 @@ def save_markdown_report(report):
     lines.append("- project_dictionary.json позволяет восстановить исходные данные и должен храниться как секретный файл.")
     lines.append("- rules/manual_hide.txt может содержать реальные персональные данные.")
     lines.append("- rules/manual_allow.txt может содержать чувствительные контексты дела.")
-    lines.append("- Инструмент выполняет псевдонимизацию / masking / risk reduction, а не гарантированную анонимизацию.")
+    lines.append("- Инструмент выполняет псевдонимизацию / masking / risk reduction, но не делает документ автоматически безопасным.")
     lines.append("- PDF на v0.1 обрабатывается только по текстовому слою; изображения и сканы не проверяются.")
-    lines.append("- Перед отправкой результата во внешний AI/SaaS нужна ручная проверка.")
+    lines.append("- Перед передачей результата внешнему сервису или третьей стороне нужна ручная проверка.")
     lines.append("")
 
     with open(report_path, "w", encoding="utf-8") as f:
@@ -1958,7 +1958,7 @@ def save_html_report(report, project_dictionary):
 def save_docx_report(report):
     report_doc = docx.Document()
     report_doc.add_heading("Отчёт анонимизации", level=1)
-    report_doc.add_paragraph("Внимание: этот отчёт содержит исходные персональные/конфиденциальные данные. Не отправляйте его в SaaS и третьим лицам.")
+    report_doc.add_paragraph("Внимание: этот отчёт содержит исходные персональные/конфиденциальные данные. Не отправляйте его внешним сервисам или третьим лицам.")
 
     for filename, data in report["files"].items():
         report_doc.add_heading(f"Файл: {filename}", level=2)
@@ -2051,7 +2051,7 @@ def save_docx_report(report):
             "Имена/отчества без контекста: их автоматическое скрытие может давать ложные срабатывания.",
             "Изображения и сканы: OCR изображений не выполнялся.",
             "Редкие форматы банковских реквизитов и номеров документов.",
-            "Судебные номера: проверьте, все ли идентификаторы дела скрыты для SaaS-режима."
+            "Судебные номера: проверьте, все ли идентификаторы дела скрыты перед внешней передачей."
         ]
         for item in manual_checks:
             report_doc.add_paragraph(item)
@@ -2120,7 +2120,7 @@ def main():
     print(f"HTML review report: {html_report_path}")
     print(f"Ручной список скрытия: {MANUAL_HIDE_PATH}")
     print(f"Ручной список разрешений: {MANUAL_ALLOW_PATH}")
-    print("\nВАЖНО: project_dictionary.json, anonymization_report.*, output/reports/*.md, output/reports/*.html и rules/*.txt не отправлять в SaaS.")
+    print("\nВАЖНО: project_dictionary.json, anonymization_report.*, output/reports/*.md, output/reports/*.html и rules/*.txt не отправлять внешним сервисам.")
 
 
 if __name__ == "__main__":

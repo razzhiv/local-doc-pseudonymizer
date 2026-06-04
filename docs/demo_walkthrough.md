@@ -6,7 +6,7 @@ Sprint 1.5 adds a local HTML review report to the same demo flow so the human-in
 
 Sprint 1.7 makes that HTML report Russian-first while keeping the same local paths, filenames, and offline-only behavior.
 
-The demo does not add a recognition engine, OCR, PDF table extraction, GUI, vault, encryption, or new compliance positioning. It shows the current local DOCX workflow on a small client/legal/business scenario.
+The demo does not add a recognition engine, OCR, PDF table extraction, app interface, protected dictionary storage, or new legal/regulatory positioning. It shows the current local DOCX workflow on a small client/legal/business scenario.
 
 ## What the demo shows
 
@@ -140,7 +140,7 @@ output/restored/golden_synthetic_client_matter_anonymized_restored.docx
 
 ## Limitations
 
-- This is an alpha local-first document preparation demo, not a guarantee of anonymization.
+- This is an alpha local-first document preparation demo, not a promise that all sensitive data has been removed.
 - Automated detection can miss values and can over-mask safe text.
 - DOCX is supported; scanned PDFs, images, handwritten text, and OCR are not supported.
 - PDF table extraction is not part of this demo.
