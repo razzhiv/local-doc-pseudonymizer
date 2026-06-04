@@ -4,13 +4,13 @@ This is the recommended Windows workflow for BeforeSending / local-doc-pseudonym
 
 It is a Windows quickstart for a local project folder. It is not a desktop app, not a GUI app, not a production installer, not a system-wide Windows installation, and not a normal Windows application with Add/Remove Programs.
 
-BeforeSending is a local-first document checkpoint before sending files to external AI, SaaS, contractors, or other third parties:
+BeforeSending is a local-first document checkpoint before sharing files with external services, contractors, or other third parties:
 
 ```text
 find -> mask -> review -> restore if needed
 ```
 
-It is a reversible masking and risk-reduction tool with human review. It is not guaranteed anonymization, not DLP, not OCR, not a legal-compliance tool, and not a zero-leakage solution.
+It is a reversible masking and risk-reduction tool with human review. It is not OCR, not a compliance tool, not a DLP system, not a guarantee of complete anonymization, and not a promise that all sensitive data has been removed.
 
 ## 1. Setup
 
@@ -81,7 +81,7 @@ review\review_report_latest.html
 Автоматическое обнаружение может пропускать данные или срабатывать слишком широко.
 Перед отправкой документов результат нужно проверить вручную.
 
-WARNING: this is a risk-reduction tool, not a guarantee of complete anonymization.
+WARNING: this is a risk-reduction tool. It does not make documents automatically safe.
 Automated detection may miss data or over-mask content.
 Always review the result manually before sharing documents.
 

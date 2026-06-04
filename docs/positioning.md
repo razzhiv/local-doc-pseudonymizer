@@ -2,12 +2,12 @@
 
 BeforeSending is a local-first document pseudonymization / reversible masking / risk-reduction tool.
 
-It focuses on preparing Russian-language legal, tax and business documents before external AI/SaaS use, contractor sharing or other third-party processing.
+It focuses on preparing Russian-language legal, tax and business documents before sharing them with external services, contractors, or other third parties.
 
 ## What this project is
 
 - A local-first document pseudonymization tool.
-- A risk-reduction utility for preparing documents before external AI/SaaS use.
+- A risk-reduction utility for preparing documents before external sharing.
 - A reversible token-based masking workflow using a local dictionary.
 - A human-review-oriented workflow with replacement reports.
 - A tool focused on Russian legal, tax and business documents.
@@ -17,22 +17,22 @@ It focuses on preparing Russian-language legal, tax and business documents befor
 
 It is not:
 
-- a guaranteed anonymization solution;
-- a 152-FZ/GDPR/HIPAA compliance tool;
-- an enterprise DLP system;
+- a guarantee that documents are automatically safe;
+- legal advice or a compliance tool;
+- a DLP system or enterprise security platform;
 - an OCR engine;
 - a tool for scanned PDFs or images in v0.1/v0.2 candidate;
 - a substitute for human review;
-- a guarantee that no personal or confidential data remains in the output.
+- a promise that no personal or confidential data remains in the output.
 
 ## Similar tools and adjacent categories
 
 Adjacent categories include:
 
 - generic PII detection SDKs;
-- enterprise DLP / CASB tools;
+- enterprise data-control tools;
 - browser privacy extensions;
-- LLM privacy proxies;
+- external-service privacy proxies;
 - redaction APIs;
 - OCR / document intelligence tools.
 
@@ -54,7 +54,7 @@ DOCX / text-layer PDF
 → optional restoration
 ```
 
-This is useful when the practical risk appears before a document is sent to an AI tool, SaaS platform, contractor, client intake process or other external processing path.
+This is useful when the practical risk appears before a document is sent to an external service, contractor, client intake process or other external processing path.
 
 ## Scope of v0.1-alpha / v0.2-alpha candidate
 
@@ -76,9 +76,9 @@ Not supported:
 - scanned PDFs;
 - images;
 - secure PDF redaction;
-- encrypted vault;
+- protected dictionary storage beyond plaintext local files;
 - enterprise workflow;
-- legal compliance guarantees.
+- legal or regulatory assurance.
 
 ## Known limitations
 

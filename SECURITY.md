@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-This project is currently an experimental MVP. Security and privacy-related reports are welcome, but the project should not be treated as a production-grade security or compliance product.
+This project is currently an experimental MVP. Security and privacy-related reports are welcome, but the project should not be treated as a production-grade security product, compliance tool, or DLP system.
 
 ## Reporting a vulnerability or privacy issue
 
@@ -30,7 +30,7 @@ Do not share:
 
 BeforeSending is a local pseudonymization / masking / risk-reduction utility.
 
-It does not guarantee complete anonymization or regulatory compliance.
+It is not a guarantee of complete anonymization and does not provide legal or regulatory assurance.
 
 ## Privacy incident prevention
 

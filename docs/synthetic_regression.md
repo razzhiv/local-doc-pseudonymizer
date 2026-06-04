@@ -52,11 +52,11 @@ The JSON is machine-readable and keeps English field names plus stable English c
 
 Initial category IDs include `passport`, `inn`, `snils`, `ogrn`, `ogrnip`, `kpp`, `bank_details`, `phone`, `address`, `birth_or_sensitive_dates`, `general_dates_negative`, `persons`, `private_orgs`, `public_authorities_negative`, `contract_numbers_negative`, `case_numbers_negative`, `english_minimal`, `docx_tables_or_structure`, and `pdf_text_layer`.
 
-The dashboard is for engineering visibility only. It is not a compliance score, not a guarantee of anonymization, and not proof that false negatives are impossible. It must be generated only from synthetic tests and must not include real documents, real personal data, token dictionaries, or runtime artifacts from real data.
+The dashboard is for engineering visibility only. It is not a safety score, not proof that all sensitive data has been removed, and not proof that false negatives are impossible. It must be generated only from synthetic tests and must not include real documents, real personal data, token dictionaries, or runtime artifacts from real data.
 
 ## XFAIL / known gaps
 
-Known gaps can be represented as `XFAIL` so that desired future behavior is tracked without blocking the current MVP.
+Known gaps can be represented as `XFAIL` so that desired behavior is tracked without blocking the current MVP.
 
 Current public synthetic XFAIL cases: none.
 

@@ -1,18 +1,18 @@
 # BeforeSending
 
-Local-first document pseudonymization / reversible masking / risk reduction for preparing DOCX and text-layer PDF documents before external AI/SaaS use.
+Local-first document pseudonymization / reversible masking / risk reduction for preparing DOCX and text-layer PDF documents before external sharing.
 
 ## Safety warning
 
-> ВНИМАНИЕ: это инструмент снижения риска, а не гарантия полной анонимизации.
+> ВНИМАНИЕ: это инструмент снижения риска. Он не делает документы автоматически безопасными.
 > Автоматическое обнаружение может пропускать данные или срабатывать слишком широко.
 > Перед отправкой документов результат нужно проверить вручную.
 
-> WARNING: this is a risk-reduction tool, not a guarantee of complete anonymization.
+> WARNING: this is a risk-reduction tool. It does not make documents automatically safe.
 > Automated detection may miss data or over-mask content.
 > Always review the result manually before sharing documents.
 
-BeforeSending is not a 152-FZ/GDPR/HIPAA compliance tool, not DLP, not OCR, not a zero-leakage solution, and not a production encrypted-vault product.
+BeforeSending is not a compliance tool, not a DLP system, not OCR, not a production security product, and not a guarantee of complete anonymization.
 
 ## Release status
 
@@ -28,14 +28,14 @@ Blocking errors: 0
 
 Pytest baseline: `17 passed` across document-level, golden demo, HTML report, quality metrics, and release hygiene tests.
 
-This release is intended for early local testing and review-driven improvement. It is not production security software, a compliance solution, or a guarantee of complete anonymization.
+This release is intended for early local testing and review-driven improvement. It is not production security software and does not replace careful human review.
 
 
 ## What this project is
 
 BeforeSending is a local-first document preparation tool.
 
-It helps reduce the risk of accidentally sending personal or confidential data to external AI/SaaS services, contractors or third parties.
+It helps reduce the risk of accidentally sending personal or confidential data to external services, contractors or other third parties.
 
 It uses:
 
@@ -55,13 +55,13 @@ It uses:
 
 This project is not:
 
-- a guaranteed anonymization solution;
-- a 152-FZ/GDPR/HIPAA compliance tool;
-- an enterprise DLP system;
+- a guarantee that documents are automatically safe;
+- legal advice or a compliance tool;
+- a DLP system or enterprise security platform;
 - an OCR engine;
 - a tool for scanned PDFs or images in v0.1;
 - a substitute for human review;
-- a guarantee that no personal or confidential data remains in the output.
+- a promise that no personal or confidential data remains in the output.
 
 ## Supported formats
 
@@ -115,7 +115,7 @@ Output:
 
 The mapping is stored locally in `project_dictionary.json`. This file is sensitive and must not be shared.
 
-Encrypted vault support is not implemented yet. Sprint 1.8 documents the future vault boundary in `docs/vault_design.md`; current token dictionaries remain plaintext sensitive local files.
+Current token dictionaries are plaintext sensitive local files. No protected dictionary storage feature is currently provided or publicly committed.
 
 ## Windows quick start
 
@@ -203,7 +203,7 @@ Do not share screenshots, ZIPs, logs or reports if they expose real values, toke
 
 This is an early local-first pseudonymization prototype.
 
-It may miss some personal or confidential data and may also over-mask non-sensitive fragments. Do not rely on it as a sole security or compliance measure.
+It may miss some personal or confidential data and may also over-mask non-sensitive fragments. Do not rely on it as a sole safety measure.
 
 Known limitations:
 
@@ -276,9 +276,9 @@ This runs the strict synthetic regression suite and writes ignored runtime repor
 - `quality_metrics_<timestamp>.md`
 - `quality_metrics_latest.md`
 
-The JSON uses stable English field names and category IDs. The Markdown report is Russian-first. These metrics are engineering visibility over synthetic tests only; they are not a compliance score, proof of complete anonymization, or proof that false negatives are impossible.
+The JSON uses stable English field names and category IDs. The Markdown report is Russian-first. These metrics are engineering visibility over synthetic tests only; they are not a safety score, proof that all sensitive data is removed, or proof that false negatives are impossible.
 
-For safe future recognition improvements, see `docs/recognition_quality_backlog.md`.
+For safe recognition maintenance, see `docs/recognition_quality_backlog.md`.
 
 ## Human review workflow
 
@@ -314,14 +314,14 @@ Key docs:
 - `docs/positioning.md` — project scope and positioning.
 - `docs/limitations.md` — known limitations.
 - `docs/supported_entities.md` — experimental entity coverage.
-- `docs/token_dictionary_security.md` — dictionary/vault safety notes.
-- `docs/vault_design.md` - Sprint 1.8 docs-only design for a future encrypted vault boundary.
+- `docs/token_dictionary_security.md` — token dictionary safety notes.
+- `docs/token_dictionary_storage_boundary.md` - sensitive token-dictionary storage boundary notes; no protected storage feature is currently provided or publicly committed.
 - `docs/safe_bug_reports.md` — how to report missed detections safely.
 - `docs/release_checklist.md` — public release hygiene checklist.
 
 ## How this differs from adjacent tools
 
-BeforeSending is not a generic PII SDK, not a browser extension, not an API firewall and not an enterprise DLP product.
+BeforeSending is not a generic PII SDK, not a browser extension, not an API firewall and not an enterprise data-control platform.
 
 It focuses on a narrower document-first workflow:
 

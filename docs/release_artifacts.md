@@ -13,7 +13,7 @@ Use this positioning in release notes:
 - synthetic regression tests;
 - sensitive boundary awareness.
 
-Do not claim guaranteed anonymization, 152-FZ/GDPR/HIPAA compliance, DLP coverage, OCR support, zero leakage, or production encrypted-vault protection.
+Do not claim that automated masking removes all sensitive data, provides legal or regulatory assurance, provides enterprise security governance, supports OCR, or provides protected dictionary storage.
 
 Do not describe release ZIPs or Windows scripts as a production installer, a normal Windows app, an Add/Remove Programs installation, or a full uninstaller.
 

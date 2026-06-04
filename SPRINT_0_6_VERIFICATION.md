@@ -1,5 +1,7 @@
 # Sprint 0.6 verification — INN normalization and OCR-suspect handling
 
+Historical note: this file records a past verification checkpoint. It is not a current public roadmap.
+
 Date: 2026-05-04
 Project: BeforeSending / local-doc-pseudonymizer
 
@@ -62,4 +64,4 @@ The new logic is bound to explicit `ИНН` context. These service-like values r
 - No new token taxonomy was added; `OCR_SUSPECT_INN` is reused.
 - OCR-like character normalization is intentionally minimal: `З/з → 3`, `О/о → 0`.
 - Passport/account guards were not changed.
-- No OCR engine, GUI, encrypted vault, or release work was added.
+- No OCR engine, app interface, protected dictionary storage, or release work was added.

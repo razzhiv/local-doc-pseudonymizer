@@ -3,13 +3,13 @@
 Project: BeforeSending / local-doc-pseudonymizer
 Date: 2026-06-01
 Scope: release/docs hygiene checkpoint after Sprint 1.6
-Status: candidate note, not a final release tag by itself
+Status: historical candidate note, not a final release tag by itself and not a current roadmap
 
 ## Summary
 
-This checkpoint aligns the public documentation and release hygiene around the current post-Sprint-1.6 baseline.
+This historical checkpoint aligned the public documentation and release hygiene around the post-Sprint-1.6 baseline.
 
-The project remains an experimental local-first pseudonymization / reversible masking / risk-reduction tool. It is not a guaranteed anonymization solution, not a legal compliance product and not an enterprise DLP system.
+The project remains an experimental local-first pseudonymization / reversible masking / risk-reduction tool. It is not a guarantee that documents are automatically safe, not a compliance tool, and not a DLP system.
 
 ## Current verified baseline
 
@@ -69,4 +69,4 @@ Do not commit, upload or share:
 - screenshots with personal or confidential data;
 - private manual rule files.
 
-Future recognition improvements should be made only through synthetic regression cases.
+New recognition improvements should be made only through synthetic regression cases.
